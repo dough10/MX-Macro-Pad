@@ -7,6 +7,11 @@ Required software for development environment
 - Text Editor
 
 
+commands
+- npm test - runs electron app using files from "src" folder
+- npm start - runns the app using minified files from "html" folder
+
+
 Steps to install development environment
 
 - cd into directory "cd Mechanical-Macro-Pad"
