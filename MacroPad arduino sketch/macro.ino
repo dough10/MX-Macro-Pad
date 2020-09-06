@@ -256,7 +256,6 @@ button buttons[] = {
   {BUTTON_KEY11, A5},
   {BUTTON_KEY12, A5},
   {BUTTON_KEY13, A5},
-
   {BUTTON_KEY14, A5},
 };
 
