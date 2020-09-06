@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Cache-control" content="public">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style media="screen">
+      body {
+        background: rgb(232, 230, 235);
+        font-family: 'Roboto', 'Noto', sans-serif;
+        font-size: 14px;
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+        user-select: none;
+        overflow-x: hidden;
+        overflow-y: hidden;
+      }
+      #loader {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+        font-size: 18px;
+        z-index:9;
+        pointer-events: none;
+        background: rgb(232, 230, 235);
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 1px 5px 0 rgba(0,0,0,0.12),0 3px 1px -2px rgba(0,0,0,0.2);
+      }
+      .bar-wrapper {
+        height: 5px;
+        width: 100%;
+        background: #ccc;
+        margin-bottom: 16px;
+        overflow: hidden;
+        display: none;
+      }
+      .load-bar {
+        height:5px;
+        width: 100%;
+        background: #3a9ab7;
+        animation: loading-bar 3s infinite;
+      }
+      .bar {
+        height:5px;
+        width: 100%;
+        transform: translateX(-100%);
+        background: #3a9ab7;
+        transition: transform 34s cubic-bezier(0, 0, 0.29, 0.74);
+      }
+      @keyframes loading-bar {
+        0% {
+          transform: translateX(-100%)
+        }
+        50% {
+          transform: translateX(100%)
+        }
+        100% {
+          transform: translateX(-100%)
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="css/base.css">
+  </head>
+  <body>
+
+    <!-- main UI -->
+    <header>
+      <div class="header-content flex space-between">
+        <span class="header-text">Configurator</span>
+        <!-- <i id="close" class="material-icons icon-button" style="color: #db4437">close</i> -->
+      </div>
+    </header>
+    <div class="header-shadow"></div>
+    <!-- app main window -->
+    <div class="wrapper" id="mainContainer">
+      <div class="card">
+        <label id="text" for="brightness">LED Brightness</label>
+        <input type="range" min="0" max="255" step="17" id="brightness">
+        <div class="flex space-evenly">
+          <div class="box" id='b1'>1</div>
+          <div class="box" id="b2">2</div>
+          <div class="box" id="b3">3</div>
+          <div class="box" id="b4">4</div>
+          <div class="box" id="b5">5</div>
+          <div class="circle" id="c12"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings UI -->
+    <div id="settings">
+      <header class="white-header">
+        <div class="header-content flex space-between">
+          <span class="header-text" id="settingHeader"></span>
+          <i id="closeSettings" class="material-icons icon-button" style="color: #db4437">close</i>
+        </div>
+      </header>
+      <div class="header-shadow"></div>
+      <!-- setting menu content -->
+      <div class="wrapper">
+        <div id="settingsCard" class="card center-align">
+          <div class="tabContainer" id="tabs">
+            <div class="tab" id="left">
+              Left
+            </div>
+            <div class="tab active" id="right">
+              Right
+            </div>
+            <div class="tabBar"></div>
+          </div>
+          <br/>
+          <br/>
+          <select id="modifiers" name="modifiers">
+            <option value="0">No Modifier</option>
+          </select>
+          <select id="keys" name="keys"></select>
+          <br/>
+          <br/>
+          <div class="button colored" id="setVal">
+            set
+          </div>
+          <div id="settings-loader" class="loader">
+            <div>
+              Loading Data...
+              <div class="bar-wrapper" style="width: 250px; display: block;">
+                <div class="load-bar"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- app loading screen -->
+    <div id="loader">
+      <div>
+        Connecting...
+        <div class="bar-wrapper" style="width: 250px; display: block;">
+          <div class="load-bar"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script async type='module' src="js/app.js"></script>
+</html>

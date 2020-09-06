@@ -1,0 +1,27 @@
+{
+  "name": "macroconfigurator",
+  "version": "1.0.0",
+  "description": "configure macro pad",
+  "main": "main.js",
+  "dependencies": {
+    "autoprefixer": "^9.8.6",
+    "electron-unhandled": "^3.0.2",
+    "esperanto": "^0.7.6",
+    "html-minifier": "^4.0.0",
+    "node-gyp": "^7.1.0",
+    "postcss": "^7.0.32",
+    "serialport": "^9.0.1",
+    "uglify-es": "^3.3.9",
+    "uglifycss": "0.0.29"
+  },
+  "devDependencies": {
+    "electron": "^9.2.0",
+    "electron-rebuild": "^1.11.0"
+  },
+  "scripts": {
+    "start": "electron ./main.js",
+    "test": "electron ./test.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
