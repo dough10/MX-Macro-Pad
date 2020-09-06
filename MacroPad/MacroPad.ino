@@ -123,7 +123,8 @@ class LED_Controller {
     int krIncriment = 51; // changeing this value changes the speed of leds
     int krBrightness = 255 - krIncriment; // default brightness value
     int changeBy = -1; // value to incriment led array index
-    // make it happen
+
+    // knight rider Mode
     void knightRider() {
       analogWrite(leds[currentLED], krBrightness);
       if (krBrightness >= 255) {
@@ -432,15 +433,13 @@ class Knob_Control {
         }
         // function button not pressed
         else {
-          if (newPosition < oldPosition) {
-            // turned right
-            if (newPosition > oldPosition) {
-              if (buttons[12].key) {
-                Keyboard.press(buttons[12].key);
-              }
-              Keyboard.press(buttons[10].key);
+          if (newPosition > oldPosition) {
+            if (buttons[12].key) {
+              Keyboard.press(buttons[12].key);
             }
-            // turned left
+            Keyboard.press(buttons[10].key);
+          }
+          if (newPosition < oldPosition) {
             if (buttons[13].key) {
               Keyboard.press(buttons[13].key);
             }
