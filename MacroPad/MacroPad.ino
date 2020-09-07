@@ -273,7 +273,6 @@ const uint8_t NumButtons = sizeof(buttons) / sizeof(button);
 // Serial and EEPROM Functions
 //
 // eeprom functions will be replaced with sd card
-//
 // --------------------------------------------
 
 class Data_Controler {
@@ -444,7 +443,7 @@ class Knob_Control {
   public:
     void read() {
       long newPosition = myEnc.read();
-      // welcome to if hell..... it sux here
+      // welcome to "if" hell..... it sux here
       if (newPosition != oldPosition) {
         // leds on adjustable mode and function key pressed
         if (!digitalRead(funct_key) && LED.LED_MODE == 0) {
@@ -525,7 +524,7 @@ void loop() {
     buttons[i + 5].update();
     buttons[i].update();
   }
-  // for UI
+  // update UI
   DATA.makeJSON();
 }
 

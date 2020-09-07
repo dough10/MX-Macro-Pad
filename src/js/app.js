@@ -42,7 +42,6 @@
     });
   }
 
-
  /**
   * determine whice transition event is being used
   */
@@ -305,7 +304,6 @@
     }
   }
 
-
  /**
   * class used to determine the end of a loop
   *
@@ -434,30 +432,24 @@
       if (page > 6) {
         keyIndex = page - 2;
         modIndex = page;
-      } else {
-        keyIndex = page - 1;
-        modIndex = keyIndex + 5;
-      }
-      console.log(modIndex, keyIndex, lastData.buttons[modIndex], lastData.buttons[keyIndex]);
-      qs('#keys').value = lastData.buttons[keyIndex];
-      qs('#modifiers').value = lastData.buttons[modIndex];
-      if (page > 6) {
         card.style.paddingTop = '0px';
         tabs.style.display = 'block';
         header.textContent = 'Encoder Config';
       } else {
+        keyIndex = page - 1;
+        modIndex = keyIndex + 5;
         card.style.removeProperty('padding-top');
         tabs.style.display = 'none';
         header.textContent = 'Button ' + page + ' Config';
       }
+      qs('#keys').value = lastData.buttons[keyIndex];
+      qs('#modifiers').value = lastData.buttons[modIndex];
       qs('#right').classList.add('active');
       qs('#left').classList.remove('active');
       settings.style.display = 'flex';
       setTimeout(_ => {
         showSettings();
-        animateElement(settings, 'translateY(0px)', 350).then(_ => {
-          resolve();
-        }).catch(reject);
+        animateElement(settings, 'translateY(0px)', 350).then(resolve).catch(reject);
       }, 40);
     });
   }
@@ -519,14 +511,11 @@
   var lastData;
   var led_mode = 0;
   function processData(e, data) {
-    console.log(data);
     // port data for connecting the app
     if (typeof data !== 'string' && Array.isArray(data)) {
       selectPort(data);
       return;
     }
-
-    // finish catching all data as json cause it is life!!!!
     try {
       data = JSON.parse(data)
       var val = 255 - data.brightness;
@@ -552,14 +541,11 @@
       qs('#brightness').value = val;
       var precent = Math.round((val / 255) * 100);
       qs('#text').textContent = 'LED Brightness: ' + precent + '%';
-      buttons = data.buttons;
     }
     catch {
       console.log(data);
-      new Toast('shits broke... Fix it');
     }
     lastData = data;
-
   }
 
 
@@ -601,9 +587,6 @@
     }
     ipc.send('selectButton', '<' + val + '>');
     new Toast('Keybind Set', 0.8);
-    var loader = qs('#settings-loader');
-    loader.style.pointerEvents = 'all';
-    fadeIn(loader);
   }
 
   function gotKeyMap(e) {
@@ -657,18 +640,14 @@
         qs('#left').classList.remove('active');
         qs('#keys').value = lastData.buttons[10];
         qs('#modifiers').value = lastData.buttons[12];
-        //ipc.send('selectButton', '<12>');
       } else {
         qs('#right').classList.remove('active');
         qs('#keys').value = lastData.buttons[11];
         qs('#modifiers').value = lastData.buttons[13];
-        //ipc.send('selectButton', '<13>');
       }
       tab.classList.add('active');
     }));
   }
-
-  var buttons;
 
  /**
   *  RUN IT
