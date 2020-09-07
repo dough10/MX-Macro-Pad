@@ -655,16 +655,16 @@
       }
       if (tab.id === 'right') {
         qs('#left').classList.remove('active');
-        ipc.send('selectButton', '<12>');
+        qs('#keys').value = lastData.buttons[10];
+        qs('#modifiers').value = lastData.buttons[12];
+        //ipc.send('selectButton', '<12>');
       } else {
         qs('#right').classList.remove('active');
-        ipc.send('selectButton', '<13>');
+        qs('#keys').value = lastData.buttons[11];
+        qs('#modifiers').value = lastData.buttons[13];
+        //ipc.send('selectButton', '<13>');
       }
       tab.classList.add('active');
-      var keyIndex = lastData.index - 2;
-      var modIndex = lastData.index;
-      qs('#keys').value = lastData.buttons[keyIndex];
-      qs('#modifiers').value = lastData.buttons[modIndex];
     }));
   }
 
