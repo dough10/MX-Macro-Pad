@@ -424,11 +424,24 @@
   */
   function openSettings(page) {
     return new Promise((resolve, reject) => {
+      page = Number(page);
       const settings = qs('#settings');
       const header = qs('#settingHeader');
       const tabs = qs('#tabs');
       const card = qs('#settingsCard');
-      if (page === "12") {
+      var keyIndex;
+      var modIndex;
+      if (page > 6) {
+        keyIndex = page - 2;
+        modIndex = page;
+      } else {
+        keyIndex = page - 1;
+        modIndex = keyIndex + 5;
+      }
+      console.log(modIndex, keyIndex, lastData.buttons[modIndex], lastData.buttons[keyIndex]);
+      qs('#keys').value = lastData.buttons[keyIndex];
+      qs('#modifiers').value = lastData.buttons[modIndex];
+      if (page > 6) {
         card.style.paddingTop = '0px';
         tabs.style.display = 'block';
         header.textContent = 'Encoder Config';
@@ -441,6 +454,7 @@
       qs('#left').classList.remove('active');
       settings.style.display = 'flex';
       setTimeout(_ => {
+        showSettings();
         animateElement(settings, 'translateY(0px)', 350).then(_ => {
           resolve();
         }).catch(reject);
@@ -503,51 +517,48 @@
   * @param {String / Array} data - can be either string or array. cannying the payload from serial com
   */
   var lastData;
+  var led_mode = 0;
   function processData(e, data) {
+    console.log(data);
     // port data for connecting the app
     if (typeof data !== 'string' && Array.isArray(data)) {
       selectPort(data);
       return;
     }
 
-    // finish catching all data in json cause it is life!!!!
+    // finish catching all data as json cause it is life!!!!
     try {
       data = JSON.parse(data)
-      console.log(data);
       var val = 255 - data.brightness;
+      if (data.LED_MODE !== led_mode) {
+        led_mode = data.LED_MODE;
+        switch(led_mode) {
+          case 0:
+            new Toast('LED: Adjustable', 0.8);
+            break;
+          case 1:
+            new Toast('LED: On Click', 0.8);
+            break;
+          case 2:
+            new Toast('LED: Breath', 0.8);
+            break;
+          case 3:
+            new Toast('LED: Knight Rider', 0.8);
+            break;
+          case 4:
+            new Toast('LED: Off', 0.8);
+        }
+      }
       qs('#brightness').value = val;
       var precent = Math.round((val / 255) * 100);
       qs('#text').textContent = 'LED Brightness: ' + precent + '%';
+      buttons = data.buttons;
     }
-    catch {}
+    catch {
+      console.log(data);
+      new Toast('shits broke... Fix it');
+    }
     lastData = data;
-
-
-    // button data
-    if (data[0] === ':') {
-      showSettings()
-      var str = data.substring(1);
-      var strings = str.split(":");
-      qs('#keys').value = Number(strings[1]);
-      qs('#modifiers').value = Number(strings[0]);
-      return;
-    }
-    // LED_MODE change notification
-    if (data[0] === '?') {
-      var mode = Number(data.substring(1));
-      if (mode === 0) {
-        new Toast('LED: Adjustable', 0.8);
-      } else if (mode === 1) {
-        new Toast('LED: On Click', 0.8);
-      } else if (mode === 2) {
-        new Toast('LED: Breath', 0.8);
-      } else if (mode === 3) {
-        new Toast('LED: Knight Rider', 0.8);
-      } else {
-        new Toast('LED: Off', 0.8);
-      }
-      return;
-    }
 
   }
 
@@ -650,12 +661,14 @@
         ipc.send('selectButton', '<13>');
       }
       tab.classList.add('active');
-      var loader = qs('#settings-loader');
-      loader.style.pointerEvents = 'all';
-      fadeIn(loader);
+      var keyIndex = lastData.index - 2;
+      var modIndex = lastData.index;
+      qs('#keys').value = lastData.buttons[keyIndex];
+      qs('#modifiers').value = lastData.buttons[modIndex];
     }));
   }
 
+  var buttons;
 
  /**
   *  RUN IT

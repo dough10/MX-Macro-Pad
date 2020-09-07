@@ -86,7 +86,6 @@ class LED_Controller {
     void setLEDMode(int mode) {
       LED_MODE = mode;
       EEPROM.update(15, LED_MODE);
-      Serial.println("?" + String(LED_MODE));
     }
 
     // set all LED values @ once
@@ -122,13 +121,13 @@ class LED_Controller {
     }
 
   private:
-    // knight rider LED mode things
+    // knight rider Mode  https://www.youtube.com/watch?v=rhLejQ00sus your welcome
     int currentLED = 3; // index of the led in the array currently having it's brightness value changed
     int krIncriment = 51; // changeing this value changes the speed of leds
     int krBrightness = 255 - krIncriment; // default brightness value
     int changeBy = -1; // value to incriment led array index
 
-    // knight rider Mode  https://www.youtube.com/watch?v=rhLejQ00sus your welcome
+    // change light or value and set light value
     void knightRider() {
       analogWrite(leds[currentLED], krBrightness);
       if (krBrightness >= 255) {
@@ -284,6 +283,20 @@ class Data_Controler {
       processData();
     }
 
+    // make data great again
+    void makeJSON(int brightness, int mode) {
+      StaticJsonDocument<200> doc;
+      doc["brightness"] = brightness;
+      doc["LED_MODE"] = mode;
+      doc["index"] = lastI;
+      JsonArray data = doc.createNestedArray("buttons");
+      for (int i = 0; i < 14; i++) {
+        data.add(buttons[i].key);
+      }
+      serializeJson(doc, Serial);
+      Serial.println();
+    }
+
     // load all datas.. must has all data.
     void loadData() {
       // brightness data
@@ -397,7 +410,7 @@ class Data_Controler {
     //
     // i read somewhere it is bad to use the String function like this?
     void sendResponse(int mod, int key) {
-      Serial.println(':' + String(mod) + ':' + String(key));
+      //Serial.println(':' + String(mod) + ':' + String(key));
     }
 
     // save data about encoder bind to eeprom
@@ -501,20 +514,6 @@ void setup() {
   }
 }
 
-// make data great again
-void jsonData(int brightness, int mode) {
-  StaticJsonDocument<200> doc;
-  doc["brightness"] = brightness;
-  doc["LED_MODE"] = mode;
-  JsonArray data = doc.createNestedArray("buttons");
-  for (int i = 0; i < 10; i++) {
-    data.add(buttons[i].key);
-  }
-  serializeJson(doc, Serial);
-  Serial.println();
-}
-
-
 // loop de loop
 void loop() {
   if (Serial) {
@@ -528,7 +527,7 @@ void loop() {
     buttons[i].update();
   }
   // for UI
-  jsonData(LED.brightness, LED.LED_MODE);
+  DATA.makeJSON(LED.brightness, LED.LED_MODE);
 }
 
 //
