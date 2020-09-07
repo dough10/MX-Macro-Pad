@@ -15,7 +15,7 @@ if [ -d "./html/css" ]
 then
     echo "Directory html/css exists."
 else
-    echo "Creating html folder"
+    echo "Creating html/css folder"
     mkdir ./html/css
 fi
 
@@ -25,7 +25,7 @@ if [ -d "./html/js" ]
 then
     echo "Directory html/js exists."
 else
-    echo "Creating html folder"
+    echo "Creating html/js folder"
     mkdir ./html/js
 fi
 
@@ -35,7 +35,7 @@ if [ -d "./html/fonts" ]
 then
     echo "Directory html/fonts exists."
 else
-    echo "Creating html folder"
+    echo "Creating html/fonts folder"
     mkdir ./html/fonts
 fi
 
@@ -52,5 +52,5 @@ echo "minifying html5 app files"
 node build.js
 
 echo "build windows app"
-electron-packager C:/Users/crumb/Desktop/desktop Configurator --platform=win32 --arch=x64
+electron-packager . Configurator --platform=win32 --arch=x64
 echo "build complete"

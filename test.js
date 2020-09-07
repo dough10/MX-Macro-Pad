@@ -17,7 +17,7 @@ function createWindow () {
     }
   })
   win.removeMenu();
-  win.loadFile('src/index.html')
+  win.loadFile('src/index.html');
   let contents = win.webContents
   contents.openDevTools()
   /*-- gets a array of avaliable COM ports and sends to app.js--*/

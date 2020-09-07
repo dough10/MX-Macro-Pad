@@ -504,13 +504,25 @@
   */
   var lastData;
   function processData(e, data) {
-    //console.log(data)
-    lastData = data;
     // port data for connecting the app
     if (typeof data !== 'string' && Array.isArray(data)) {
       selectPort(data);
       return;
     }
+
+    // finish catching all data in json cause it is life!!!!
+    try {
+      data = JSON.parse(data)
+      console.log(data);
+      var val = 255 - data.brightness;
+      qs('#brightness').value = val;
+      var precent = Math.round((val / 255) * 100);
+      qs('#text').textContent = 'LED Brightness: ' + precent + '%';
+    }
+    catch {}
+    lastData = data;
+
+
     // button data
     if (data[0] === ':') {
       showSettings()
@@ -536,11 +548,7 @@
       }
       return;
     }
-    // led Adjustable Brightness UI
-    var val = 255 - Number(data);
-    qs('#brightness').value = val;
-    var precent = Math.round((val / 255) * 100);
-    qs('#text').textContent = 'LED Brightness: ' + precent + '%';
+
   }
 
 
@@ -652,5 +660,11 @@
  /**
   *  RUN IT
   */
-  window.onload = loadRipples().then(loadGoogleFonts).then(getKeyMap).then(gotKeyMap).then(getModifers).then(gotModifiers).then(setupListeners);
+  window.onload = loadRipples()
+  .then(loadGoogleFonts)
+  .then(getKeyMap)
+  .then(gotKeyMap)
+  .then(getModifers)
+  .then(gotModifiers)
+  .then(setupListeners);
 }());
