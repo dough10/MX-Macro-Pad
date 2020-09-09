@@ -1,20 +1,20 @@
 (function () {
  /**
-  *
+  * shortcut function for document.querySelector()
   */
   function qs(selector, scope) {
     return (scope || document).querySelector(selector)
   }
 
  /**
-  *
+  * shortcut function for document.querySelectorAll()
   */
   function qsa(selector, scope) {
     return (scope || document).querySelectorAll(selector)
   }
 
  /**
-  *
+  * load a css file to the document | DOM
   */
   function loadCSSFile(src) {
     return new Promise((resolve, reject) => {
@@ -29,7 +29,7 @@
   }
 
  /**
-  *
+  * load a JS file to the document | DOM
   */
   function loadJSFile(src) {
     return new Promise((resolve, reject) => {
@@ -577,7 +577,9 @@
     return thing;
   }
 
-
+  /**
+   * Set the value of the button or encoder
+   */
   function setVal() {
     var val = addZeros(qs('#keys').value, 3);
     var mod = qs('#modifiers').value;
@@ -589,6 +591,9 @@
     new Toast('Keybind Set', 0.8);
   }
 
+  /**
+   * you have got the key map json do something with it
+   */
   function gotKeyMap(e) {
     return new Promise((resolve, reject) => {
       var response = e.target.response;
@@ -599,6 +604,9 @@
     });
   }
 
+  /**
+   * you have got the modifier map json do something with it
+   */
   function gotModifiers(e) {
     return new Promise((resolve, reject) => {
       var response = e.target.response;
@@ -610,6 +618,9 @@
 
   }
 
+  /**
+   * circle was clicked
+   */
   function circleClick(e) {
     var num = e.target.id.substring(1);
     ipc.send('selectButton', '<' + num + '>');
@@ -619,7 +630,9 @@
   // electron communication
   var ipc = require('electron').ipcRenderer;
 
-
+  /**
+   * listen for shit to happen to things (getting technical on dah ass)
+   */
   function setupListeners() {
     // data from electron backend
     ipc.on('data', processData);

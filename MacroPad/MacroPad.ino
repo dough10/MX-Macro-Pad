@@ -361,14 +361,12 @@ class Data_Controler {
         // getting current keybinds for UI
         if (i < 10 && i != 0) {
           lastI = i - 1;
-          //sendResponse(buttons[lastI + 5].key, buttons[lastI].key);
           newData = false;
           return;
         }
         // getting current encoder binds for UI
         if (i == 12 || i == 13) {
           lastI = i - 1;
-          //sendResponse(buttons[lastI + 1].key, buttons[lastI - 1].key);
           newData = false;
           return;
         }
@@ -387,8 +385,6 @@ class Data_Controler {
           } else {
             saveButtonData(lastI, mod, key);
           }
-          // send confirmation to app the save has been made
-          //sendResponse(mod, key);
           // no modifier key
         } else {
           // save the data
@@ -397,8 +393,6 @@ class Data_Controler {
           } else {
             saveButtonData(lastI, 0, i);
           }
-          // send confirmation to app the save has been made
-          //sendResponse(0, i);
         }
         newData = false;
       }
