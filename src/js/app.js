@@ -501,7 +501,6 @@
     }
   }
 
-
  /**
   * process data from serial port
   *
@@ -511,7 +510,7 @@
   var lastData;
   var led_mode = 0;
   function processData(e, data) {
-    console.log(data);
+    //console.log(data);
     // port data for connecting the app
     if (typeof data !== 'string' && Array.isArray(data)) {
       selectPort(data);
@@ -548,7 +547,6 @@
     }
     lastData = data;
   }
-
 
  /**
   * create a option element and append to the parent element

@@ -6,7 +6,28 @@
 
 */
 
+// --------------------------------------------
+// Button Pin definitions
+// --------------------------------------------
 
+// cherry mx buttons
+#define BUTTON_PIN1 A0
+#define BUTTON_PIN2 A1
+#define BUTTON_PIN3 A2
+#define BUTTON_PIN4 A3
+#define BUTTON_PIN5 A4
+// encoder button pin
+#define FUNCT_KEY A5
+
+// --------------------------------------------
+// LED Pin definitions
+// --------------------------------------------
+
+#define LED_PIN1 9
+#define LED_PIN2 10
+#define LED_PIN3 11
+#define LED_PIN4 5
+#define LED_PIN5 13
 
 // --------------------------------------------
 // Key Bind defaults
@@ -28,29 +49,6 @@
 #define BUTTON_KEY14 0 // encoder left modifier default
 
 // --------------------------------------------
-// Button Pin definitions
-// --------------------------------------------
-
-#define BUTTON_PIN1 A0
-#define BUTTON_PIN2 A1
-#define BUTTON_PIN3 A2
-#define BUTTON_PIN4 A3
-#define BUTTON_PIN5 A4
-// encoder button pin
-#define FUNCT_KEY A5
-
-// --------------------------------------------
-// LED Pin definitions
-// --------------------------------------------
-
-#define LED_PIN1 9
-#define LED_PIN2 10
-#define LED_PIN3 11
-#define LED_PIN4 5
-#define LED_PIN5 13
-
-
-// --------------------------------------------
 // Lib Imports
 // --------------------------------------------
 
@@ -70,9 +68,9 @@
 class LED_Controller {
   public:
     // variable for changeing the LEDS light modes
-    int LED_MODE = 2;
+    int LED_MODE = 0;
 
-    // array of PWM pins with leds connected
+    // array of PWM pins
     const int leds[5] = {
       LED_PIN1,
       LED_PIN2,
@@ -80,6 +78,7 @@ class LED_Controller {
       LED_PIN4,
       LED_PIN5,
     };
+
     // on press led mode
     int brightnesses[5] = {
       255, // button 1 led brightness
@@ -88,6 +87,7 @@ class LED_Controller {
       255, // button 4 led brightness
       255, // button 5 led brightness
     };
+
     // always on light mode
     int brightness = 0; // adjustable brightness value
     const int brightnessIncriment = 5; // 1 encoder click = this value in change of led brightness
@@ -165,6 +165,7 @@ class LED_Controller {
         }
       }
     }
+
     // breath LED Mode
     int fadeBrightness = 1;
     int fadeAmount = 1;
@@ -313,10 +314,10 @@ class Data_Controler {
         LED.brightness = oldBrightness;
       }
       // load button data
-      for (int i = 1; i < 15; i++) {
+      for (int i = 0; i < 14; i++) {
         char data = EEPROM.read(i);
         if (data) {
-          buttons[i - 1].key = data;
+          buttons[i].key = data;
         }
       }
       // load LED Mode
