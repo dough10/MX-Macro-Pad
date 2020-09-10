@@ -511,6 +511,7 @@
   var lastData;
   var led_mode = 0;
   function processData(e, data) {
+    console.log(data);
     // port data for connecting the app
     if (typeof data !== 'string' && Array.isArray(data)) {
       selectPort(data);

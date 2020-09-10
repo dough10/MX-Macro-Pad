@@ -28,7 +28,7 @@
 #define BUTTON_KEY14 0 // encoder left modifier default
 
 // --------------------------------------------
-// Pin definitions
+// Button Pin definitions
 // --------------------------------------------
 
 #define BUTTON_PIN1 A0
@@ -36,22 +36,32 @@
 #define BUTTON_PIN3 A2
 #define BUTTON_PIN4 A3
 #define BUTTON_PIN5 A4
+// encoder button pin
+#define FUNCT_KEY A5
+
+// --------------------------------------------
+// LED Pin definitions
+// --------------------------------------------
+
+#define LED_PIN1 9
+#define LED_PIN2 10
+#define LED_PIN3 11
+#define LED_PIN4 5
+#define LED_PIN5 13
+
 
 // --------------------------------------------
 // Lib Imports
 // --------------------------------------------
 
-// i need <HID-Project.h> for media keys but makes strange things happen.
+// i need <HID-Project.h> for media keys but it makes strange things happen.
 // i can't find a glossary of key decimal values
-// the key map i am using makes keyboard no work /shrug
+// the key map i am using makes keyboard no work /shrug  (./src/keys.json has current key map)
 //#include <HID-Project.h>
 #include <Keyboard.h>
 #include <EEPROM.h>
 #include <Encoder.h>
 #include <ArduinoJson.h>
-
-// encoder button pin
-const uint8_t funct_key = A5;
 
 // --------------------------------------------
 // Lighting mode functions
@@ -64,11 +74,11 @@ class LED_Controller {
 
     // array of PWM pins with leds connected
     const int leds[5] = {
-      9, // button 1 led
-      10, // button 2 led
-      11, // button 3 led
-      5, // button 4 led
-      13, // button 5 led
+      LED_PIN1,
+      LED_PIN2,
+      LED_PIN3,
+      LED_PIN4,
+      LED_PIN5,
     };
     // on press led mode
     int brightnesses[5] = {
@@ -181,7 +191,7 @@ class button {
         return; // Nothing to see here, folks
       }
       // if the if is the if
-      if (state && !digitalRead(funct_key)) {
+      if (state && !digitalRead(FUNCT_KEY)) {
         // button 1 sets LEDs to adjustable brightness mode
         if (pin == A0 && LED.LED_MODE != 0) {
           LED.setLEDMode(0);
@@ -213,7 +223,7 @@ class button {
       }
       lastPressed = millis();
       // stop key press if function key held
-      if (!digitalRead(funct_key)) {
+      if (!digitalRead(FUNCT_KEY)) {
         return;
       }
       state ? Keyboard.press(key) : Keyboard.release(key);
@@ -398,13 +408,6 @@ class Data_Controler {
       }
     }
 
-    // sends data back to UI
-    //
-    // i read somewhere it is bad to use the String function like this?
-    void sendResponse(int mod, int key) {
-      //Serial.println(':' + String(mod) + ':' + String(key));
-    }
-
     // save data about encoder bind to eeprom
     void saveEncoderData(int index, int mod, int key) {
       // do i need to check if index is in the correct range?
@@ -440,7 +443,7 @@ class Knob_Control {
       // welcome to "if" hell..... it sux here
       if (newPosition != oldPosition) {
         // leds on adjustable mode and function key pressed
-        if (!digitalRead(funct_key) && LED.LED_MODE == 0) {
+        if (!digitalRead(FUNCT_KEY) && LED.LED_MODE == 0) {
           int lowest = 255 - LED.brightnessIncriment;
           // turn right
           if (newPosition > oldPosition) {
@@ -500,7 +503,7 @@ void setup() {
   for (int i = 0; i < 5; i++) {
     pinMode(LED.leds[i], INPUT);
   }
-  pinMode(funct_key, INPUT_PULLUP);
+  pinMode(FUNCT_KEY, INPUT_PULLUP);
   for (int i = 0; i < NumButtons; i++) {
     pinMode(buttons[i].pin, INPUT_PULLUP);
   }
