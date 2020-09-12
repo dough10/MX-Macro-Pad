@@ -510,7 +510,7 @@
   var lastData;
   var led_mode = 0;
   function processData(e, data) {
-    //console.log(data);
+    console.log(data);
     // port data for connecting the app
     if (typeof data !== 'string' && Array.isArray(data)) {
       selectPort(data);
@@ -543,7 +543,7 @@
       qs('#text').textContent = 'LED Brightness: ' + precent + '%';
     }
     catch {
-      console.log(data);
+      console.error('Error Parsing Data');
     }
     lastData = data;
   }

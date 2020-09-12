@@ -1,4 +1,5 @@
 /*
+
     Macro Keys
 
    led light brightness values are reverse 0 max and 255 off
@@ -30,6 +31,12 @@
 #define LED_PIN5 13
 
 // --------------------------------------------
+// SD Card Pin definitions
+// --------------------------------------------
+
+#define CSPIN 4
+
+// --------------------------------------------
 // Key Bind defaults
 // --------------------------------------------
 
@@ -57,9 +64,10 @@
 // the key map i am using makes keyboard no work /shrug  (./src/keys.json has current key map)
 //#include <HID-Project.h>
 #include <Keyboard.h>
-#include <EEPROM.h>
 #include <Encoder.h>
 #include <ArduinoJson.h>
+#include <SPI.h>
+#include <SD.h>
 
 // --------------------------------------------
 // Lighting mode functions
@@ -67,9 +75,6 @@
 
 class LED_Controller {
   public:
-    // variable for changeing the LEDS light modes
-    int LED_MODE = 0;
-
     // array of PWM pins
     const int leds[5] = {
       LED_PIN1,
@@ -88,14 +93,29 @@ class LED_Controller {
       255, // button 5 led brightness
     };
 
-    // always on light mode
-    int brightness = 0; // adjustable brightness value
-    const int brightnessIncriment = 5; // 1 encoder click = this value in change of led brightness
-
     // change the mode of the LEDs
     void setLEDMode(int mode) {
       LED_MODE = mode;
-      EEPROM.update(15, LED_MODE);
+    }
+
+    // return LED_MODE
+    int getLEDMode() {
+      return LED_MODE;
+    }
+
+    // Set the brights of leds in mode 0
+    void setBrightness(int b) {
+      brightness = b;
+    }
+
+    // returns brightness of led in mode 0
+    int getBrightness() {
+      return brightness;
+    }
+
+    // return the incirment led will be changed by when turning encoder
+    int getIncriment() {
+      return brightnessIncriment;
     }
 
     // set all LED values @ once
@@ -131,13 +151,19 @@ class LED_Controller {
     }
 
   private:
+    int LED_MODE = 0; // variable for changeing the LEDS light modes
+
     // knight rider Mode  https://www.youtube.com/watch?v=rhLejQ00sus your welcome
     int currentLED = 3; // index of the led in the array currently having it's brightness value changed
     int krIncriment = 51; // changeing this value changes the speed of leds
     int krBrightness = 255 - krIncriment; // default brightness value
     int changeBy = -1; // value to incriment led array index
 
-    // change light or value and set light value
+    // always on light mode
+    int brightness = 0; // adjustable brightness value
+    const int brightnessIncriment = 5; // 1 encoder click = this value in change of led brightness
+
+    // change lED and / or value
     void knightRider() {
       analogWrite(leds[currentLED], krBrightness);
       if (krBrightness >= 255) {
@@ -191,32 +217,33 @@ class button {
       if (state == pressed || (millis() - lastPressed  <= debounceTime)) {
         return; // Nothing to see here, folks
       }
+      int led_mode = LED.getLEDMode();
       // if the if is the if
       if (state && !digitalRead(FUNCT_KEY)) {
         // button 1 sets LEDs to adjustable brightness mode
-        if (pin == A0 && LED.LED_MODE != 0) {
+        if (pin == A0 && led_mode != 0) {
           LED.setLEDMode(0);
           return;
         }
         // button 2 sets LEDs to light on keypress and fade out after
-        if (pin == A1 && LED.LED_MODE != 1) {
+        if (pin == A1 && led_mode != 1) {
           LED.setLEDMode(1);
           LED.makeLight(255);
           return;
         }
         // button 3 sets LEDs to Fade / Breath mode
-        if (pin == A2 && LED.LED_MODE != 2) {
+        if (pin == A2 && led_mode != 2) {
           LED.setLEDMode(2);
           return;
         }
         // knight rider mode
-        if (pin == A3 && LED.LED_MODE != 3) {
+        if (pin == A3 && led_mode != 3) {
           LED.setLEDMode(3);
           LED.makeLight(255);
           return;
         }
         // LED off mode
-        if (pin == A4 && LED.LED_MODE != 4) {
+        if (pin == A4 && led_mode != 4) {
           LED.setLEDMode(4);
           LED.makeLight(255);
           return;
@@ -229,7 +256,7 @@ class button {
       }
       state ? Keyboard.press(key) : Keyboard.release(key);
       pressed = state;
-      if (state && LED.LED_MODE == 1) {
+      if (state && led_mode == 1) {
         switch (pin) {
           case A0:
             LED.brightnesses[0] = 0;
@@ -272,32 +299,53 @@ button buttons[] = {
   {BUTTON_KEY8, BUTTON_PIN3},
   {BUTTON_KEY9, BUTTON_PIN4},
   {BUTTON_KEY10, BUTTON_PIN5},
-  {BUTTON_KEY11, A5},
-  {BUTTON_KEY12, A5},
-  {BUTTON_KEY13, A5},
-  {BUTTON_KEY14, A5},
+  {BUTTON_KEY11, FUNCT_KEY},
+  {BUTTON_KEY12, FUNCT_KEY},
+  {BUTTON_KEY13, FUNCT_KEY},
+  {BUTTON_KEY14, FUNCT_KEY},
 };
 
 const uint8_t NumButtons = sizeof(buttons) / sizeof(button);
 
 // --------------------------------------------
-// Serial and EEPROM Functions
-//
-// eeprom functions will be replaced with sd card
+// Serial and SD Card Functions
 // --------------------------------------------
 
 class Data_Controler {
   public:
+    void init() {
+      if (!SD.begin(CSPIN)) {
+        Serial.println("SD Card initialization failed! using default configuration");
+        return;
+      }
+      File cFile = SD.open(filename);
+      const size_t capacity = JSON_ARRAY_SIZE(14) + JSON_OBJECT_SIZE(3) + 40;
+      DynamicJsonDocument doc(capacity);
+      DeserializationError error = deserializeJson(doc, cFile);
+      if (error) {
+        Serial.println(F("Failed to read file, using default configuration"));
+        cFile.close();
+        return;
+      }
+      LED.setBrightness(doc["brightness"]);
+      LED.setLEDMode(doc["LED_MODE"]);
+      for (int i = 0; i < 14; i++) {
+        buttons[i].key = doc["buttons"][i];
+      }
+      cFile.close();
+    }
+
     void checkForData() {
       receiveData();
       processData();
     }
 
     // make data great again
-    void makeJSON() {
-      StaticJsonDocument<200> doc;
-      doc["brightness"] = LED.brightness;
-      doc["LED_MODE"] = LED.LED_MODE;
+    void printJSON() {
+      const size_t capacity = JSON_ARRAY_SIZE(14) + JSON_OBJECT_SIZE(3);
+      DynamicJsonDocument doc(capacity);
+      doc["brightness"] = LED.getBrightness();
+      doc["LED_MODE"] = LED.getLEDMode();
       JsonArray data = doc.createNestedArray("buttons");
       for (int i = 0; i < 14; i++) {
         data.add(buttons[i].key);
@@ -306,32 +354,18 @@ class Data_Controler {
       Serial.println();
     }
 
-    // load all datas.. must has all data.
-    void loadData() {
-      // brightness data
-      int oldBrightness = EEPROM.read(0);
-      if (oldBrightness) {
-        LED.brightness = oldBrightness;
-      }
-      // load button data
-      for (int i = 0; i < 14; i++) {
-        char data = EEPROM.read(i);
-        if (data) {
-          buttons[i].key = data;
-        }
-      }
-      // load LED Mode
-      char mode = EEPROM.read(15);
-      if (mode) {
-        LED.LED_MODE = mode;
-      }
-    }
-
   private:
     const byte numChars = 15; // max length of the array
     char receivedChars[15]; // array of recieved chars i.e. Numbers in this case
     boolean newData = false; // flag for detecting when naw data is complete
     int lastI = 0; // index of the last button requested by UI
+    const char *filename = "/config.txt";
+    struct Config {
+      int brightness;
+      int LED_MODE;
+      int buttons[14];
+    };
+    Config config;
 
     // looking for data from UI
     void receiveData() {
@@ -363,7 +397,7 @@ class Data_Controler {
       }
     }
 
-    // this is not a great way of dealing with the incomming data
+    // this needs to receive JSON
     //
     // i should write functions to look for other start and end markers to better seperate data in place of using the maths (not a backend eng. lol not a frontend eng either)
     void processData() {
@@ -384,54 +418,72 @@ class Data_Controler {
         // saving keybinds
         // split off first number
         int mod = (i / 1000) % 10;
-        // checking to see if a modifier key was sent
+        // if a modifier key was sent
         if (mod > 0) {
-          // get keys back from sent data
+          // get keys from sent data
           int thousands = mod * 1000;
           int key = i - thousands;
           mod = mod + 127;
           // save the data
           if (lastI == 11 || lastI == 12) {
-            saveEncoderData(lastI, mod, key);
-          } else {
-            saveButtonData(lastI, mod, key);
+            setEncoderBind(lastI, mod, key);
           }
-          // no modifier key
-        } else {
+          else {
+            setButtonBind(lastI, mod, key);
+          }
+        }
+        // no modifier key
+        else {
           // save the data
           if (lastI == 11 || lastI == 12) {
-            saveEncoderData(lastI, 0, i);
-          } else {
-            saveButtonData(lastI, 0, i);
+            setEncoderBind(lastI, 0, i);
+          }
+          else {
+            setButtonBind(lastI, 0, i);
           }
         }
         newData = false;
       }
     }
 
-    // save data about encoder bind to eeprom
-    void saveEncoderData(int index, int mod, int key) {
-      // do i need to check if index is in the correct range?
-      // should i assume someown will try to break this?
+    // save data about encoder
+    void setEncoderBind(int index, int mod, int key) {
       buttons[index + 1].key = mod;
       buttons[index - 1].key = key;
-      EEPROM.update(index + 2, mod);
-      EEPROM.update(index, key);
+      saveConfig();
     }
 
-    // save data about button bind to eeprom
-    void saveButtonData(int index, int mod, int key) {
-      // do i need to check if index is in the correct range?
-      // should i assume someown will try to break this?
+    // save data about button
+    void setButtonBind(int index, int mod, int key) {
       buttons[index + 5].key = mod;
       buttons[index].key = key;
-      EEPROM.update(index + 6, mod);
-      EEPROM.update(index + 1, key);
+      saveConfig();
+    }
+
+    //
+    void saveConfig() {
+      SD.remove(filename);
+      File cFile = SD.open(filename, FILE_WRITE);
+      if (!cFile) {
+        Serial.println(F("Failed to create file"));
+        return;
+      }
+      const size_t capacity = JSON_ARRAY_SIZE(14) + JSON_OBJECT_SIZE(3);
+      DynamicJsonDocument doc(capacity);
+      doc["brightness"] = LED.getBrightness();
+      doc["LED_MODE"] = LED.getLEDMode();
+      JsonArray data = doc.createNestedArray("buttons");
+      for (int i = 0; i < 14; i++) {
+        data.add(buttons[i].key);
+      }
+      if (serializeJson(doc, cFile) == 0) {
+        Serial.println(F("Failed to write to file"));
+      }
+      cFile.close();
     }
 };
 
 Data_Controler   DATA;
-
 
 // --------------------------------------------
 // Encoder Functions
@@ -444,22 +496,22 @@ class Knob_Control {
       // welcome to "if" hell..... it sux here
       if (newPosition != oldPosition) {
         // leds on adjustable mode and function key pressed
-        if (!digitalRead(FUNCT_KEY) && LED.LED_MODE == 0) {
-          int lowest = 255 - LED.brightnessIncriment;
+        if (!digitalRead(FUNCT_KEY) && LED.getLEDMode() == 0) {
+          int brightness = LED.getBrightness();
+          int brightnessIncriment = LED.getIncriment();
+          int lowest = 255 - brightnessIncriment;
           // turn right
           if (newPosition > oldPosition) {
             // turn up the brightness
-            if (LED.brightness > 0 && LED.brightness <= lowest) {
-              LED.brightness = LED.brightness - LED.brightnessIncriment;
-              EEPROM.update(0, LED.brightness);
+            if (brightness > 0 && brightness <= lowest) {
+              LED.setBrightness(brightness - brightnessIncriment);
             }
           }
           // turn left
           if (newPosition < oldPosition) {
             // turn down the brightness
-            if (LED.brightness >= 0 && LED.brightness < lowest) {
-              LED.brightness = LED.brightness + LED.brightnessIncriment;
-              EEPROM.update(0, LED.brightness);
+            if (brightness >= 0 && brightness < lowest) {
+              LED.setBrightness(brightness + brightnessIncriment);
             }
           }
         }
@@ -467,6 +519,7 @@ class Knob_Control {
         else {
           // turn right
           if (newPosition > oldPosition) {
+            // press buttons
             if (buttons[12].key) {
               Keyboard.press(buttons[12].key);
             }
@@ -474,6 +527,7 @@ class Knob_Control {
           }
           // turn left
           if (newPosition < oldPosition) {
+            // press buttons
             if (buttons[13].key) {
               Keyboard.press(buttons[13].key);
             }
@@ -500,7 +554,6 @@ void setup() {
   }
   Serial.begin(9600);
   Keyboard.begin();
-  DATA.loadData();
   for (int i = 0; i < 5; i++) {
     pinMode(LED.leds[i], INPUT);
   }
@@ -508,6 +561,7 @@ void setup() {
   for (int i = 0; i < NumButtons; i++) {
     pinMode(buttons[i].pin, INPUT_PULLUP);
   }
+  DATA.init();
 }
 
 // loop de loop
@@ -523,7 +577,7 @@ void loop() {
     buttons[i].update();
   }
   // update UI
-  DATA.makeJSON();
+  DATA.printJSON();
 }
 
 //

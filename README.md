@@ -15,7 +15,7 @@ Steps to install development environment
   - run "npm install"
   - rebuild for electron compatibility './node_modules/.bin/electron-rebuild.cmd'
   - run "npm test" if all was successful the app will load in a electron window
-  - have fun hacking away at it
+  - have fun
 
 commands
   - npm test - runs the electron app using files from "src" folder
