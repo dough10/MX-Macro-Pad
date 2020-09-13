@@ -510,7 +510,7 @@
   var lastData;
   var led_mode = 0;
   function processData(e, data) {
-    console.log(data);
+    //console.log(data);
     // port data for connecting the app
     if (typeof data !== 'string' && Array.isArray(data)) {
       selectPort(data);
@@ -543,7 +543,7 @@
       qs('#text').textContent = 'LED Brightness: ' + precent + '%';
     }
     catch {
-      console.error('Error Parsing Data');
+      console.error('Error Parsing Data' , data);
     }
     lastData = data;
   }
@@ -652,10 +652,12 @@
         qs('#left').classList.remove('active');
         qs('#keys').value = lastData.buttons[10];
         qs('#modifiers').value = lastData.buttons[12];
+        ipc.send('selectButton', '<12>');
       } else {
         qs('#right').classList.remove('active');
         qs('#keys').value = lastData.buttons[11];
         qs('#modifiers').value = lastData.buttons[13];
+        ipc.send('selectButton', '<13>');
       }
       tab.classList.add('active');
     }));
