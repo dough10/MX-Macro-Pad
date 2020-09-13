@@ -1,4 +1,4 @@
-# Mechanical-Macro-Pad
+# MX Macro-Pad
 
 
 Required software for UI development environment
