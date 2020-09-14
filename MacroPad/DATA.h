@@ -11,7 +11,7 @@ class Data_Controler {
   public:
     void init() {
       if (!SD.begin(CSPIN)) {
-        Serial.println("SD Card initialization failed! using default configuration");
+        Serial.println(F("SD Card initialization failed! using default configuration"));
         return;
       }
       File cFile = SD.open(filename);
@@ -42,7 +42,7 @@ class Data_Controler {
       Serial.println();
     }
 
-    //
+    //write config to SD card
     void saveConfig() {
       SD.remove(filename);
       File cFile = SD.open(filename, FILE_WRITE);
@@ -62,7 +62,6 @@ class Data_Controler {
     int lastI = 0; // index of the last button requested by UI
     const char *filename = "/config.txt";
     int lstMode = LED.getLEDMode();  // by getting current mode from LED class we avoid unneeded save on bootup
-    int lstBrightness = LED.getBrightness();
 
     // looking for data from UI
     void receiveData() {
