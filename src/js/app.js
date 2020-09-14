@@ -1,20 +1,20 @@
 (function () {
  /**
-  *
+  * shortcut function for document.querySelector()
   */
   function qs(selector, scope) {
     return (scope || document).querySelector(selector)
   }
 
  /**
-  *
+  * shortcut function for document.querySelectorAll()
   */
   function qsa(selector, scope) {
     return (scope || document).querySelectorAll(selector)
   }
 
  /**
-  *
+  * load a css file to the document | DOM
   */
   function loadCSSFile(src) {
     return new Promise((resolve, reject) => {
@@ -29,7 +29,7 @@
   }
 
  /**
-  *
+  * load a JS file to the document | DOM
   */
   function loadJSFile(src) {
     return new Promise((resolve, reject) => {
@@ -41,7 +41,6 @@
       qs('body').appendChild(script);
     });
   }
-
 
  /**
   * determine whice transition event is being used
@@ -305,7 +304,6 @@
     }
   }
 
-
  /**
   * class used to determine the end of a loop
   *
@@ -424,26 +422,34 @@
   */
   function openSettings(page) {
     return new Promise((resolve, reject) => {
+      page = Number(page);
       const settings = qs('#settings');
       const header = qs('#settingHeader');
       const tabs = qs('#tabs');
       const card = qs('#settingsCard');
-      if (page === "12") {
+      var keyIndex;
+      var modIndex;
+      if (page > 6) {
+        keyIndex = page - 2;
+        modIndex = page;
         card.style.paddingTop = '0px';
         tabs.style.display = 'block';
         header.textContent = 'Encoder Config';
       } else {
+        keyIndex = page - 1;
+        modIndex = keyIndex + 5;
         card.style.removeProperty('padding-top');
         tabs.style.display = 'none';
         header.textContent = 'Button ' + page + ' Config';
       }
+      qs('#keys').value = lastData.buttons[keyIndex];
+      qs('#modifiers').value = lastData.buttons[modIndex];
       qs('#right').classList.add('active');
       qs('#left').classList.remove('active');
       settings.style.display = 'flex';
       setTimeout(_ => {
-        animateElement(settings, 'translateY(0px)', 350).then(_ => {
-          resolve();
-        }).catch(reject);
+        showSettings();
+        animateElement(settings, 'translateY(0px)', 350).then(resolve).catch(reject);
       }, 40);
     });
   }
@@ -495,7 +501,6 @@
     }
   }
 
-
  /**
   * process data from serial port
   *
@@ -503,46 +508,45 @@
   * @param {String / Array} data - can be either string or array. cannying the payload from serial com
   */
   var lastData;
+  var led_mode = 0;
   function processData(e, data) {
-    //console.log(data)
-    lastData = data;
+    //console.log(data);
     // port data for connecting the app
     if (typeof data !== 'string' && Array.isArray(data)) {
       selectPort(data);
       return;
     }
-    // button data
-    if (data[0] === ':') {
-      showSettings()
-      var str = data.substring(1);
-      var strings = str.split(":");
-      qs('#keys').value = Number(strings[1]);
-      qs('#modifiers').value = Number(strings[0]);
-      return;
-    }
-    // LED_MODE change notification
-    if (data[0] === '?') {
-      var mode = Number(data.substring(1));
-      if (mode === 0) {
-        new Toast('LED: Adjustable', 0.8);
-      } else if (mode === 1) {
-        new Toast('LED: On Click', 0.8);
-      } else if (mode === 2) {
-        new Toast('LED: Breath', 0.8);
-      } else if (mode === 3) {
-        new Toast('LED: Knight Rider', 0.8);
-      } else {
-        new Toast('LED: Off', 0.8);
+    try {
+      data = JSON.parse(data)
+      var val = 255 - data.brightness;
+      if (data.LED_MODE !== led_mode) {
+        led_mode = data.LED_MODE;
+        switch(led_mode) {
+          case 0:
+            new Toast('LED: Adjustable', 0.8);
+            break;
+          case 1:
+            new Toast('LED: On Click', 0.8);
+            break;
+          case 2:
+            new Toast('LED: Breath', 0.8);
+            break;
+          case 3:
+            new Toast('LED: Knight Rider', 0.8);
+            break;
+          case 4:
+            new Toast('LED: Off', 0.8);
+        }
       }
-      return;
+      qs('#brightness').value = val;
+      var precent = Math.round((val / 255) * 100);
+      qs('#text').textContent = 'LED Brightness: ' + precent + '%';
     }
-    // led Adjustable Brightness UI
-    var val = 255 - Number(data);
-    qs('#brightness').value = val;
-    var precent = Math.round((val / 255) * 100);
-    qs('#text').textContent = 'LED Brightness: ' + precent + '%';
+    catch {
+      console.error('Error Parsing Data' , data);
+    }
+    lastData = data;
   }
-
 
  /**
   * create a option element and append to the parent element
@@ -572,7 +576,9 @@
     return thing;
   }
 
-
+  /**
+   * Set the value of the button or encoder
+   */
   function setVal() {
     var val = addZeros(qs('#keys').value, 3);
     var mod = qs('#modifiers').value;
@@ -582,11 +588,11 @@
     }
     ipc.send('selectButton', '<' + val + '>');
     new Toast('Keybind Set', 0.8);
-    var loader = qs('#settings-loader');
-    loader.style.pointerEvents = 'all';
-    fadeIn(loader);
   }
 
+  /**
+   * you have got the key map json do something with it
+   */
   function gotKeyMap(e) {
     return new Promise((resolve, reject) => {
       var response = e.target.response;
@@ -597,6 +603,9 @@
     });
   }
 
+  /**
+   * you have got the modifier map json do something with it
+   */
   function gotModifiers(e) {
     return new Promise((resolve, reject) => {
       var response = e.target.response;
@@ -608,6 +617,9 @@
 
   }
 
+  /**
+   * circle was clicked
+   */
   function circleClick(e) {
     var num = e.target.id.substring(1);
     ipc.send('selectButton', '<' + num + '>');
@@ -617,7 +629,9 @@
   // electron communication
   var ipc = require('electron').ipcRenderer;
 
-
+  /**
+   * listen for shit to happen to things (getting technical on dah ass)
+   */
   function setupListeners() {
     // data from electron backend
     ipc.on('data', processData);
@@ -636,21 +650,27 @@
       }
       if (tab.id === 'right') {
         qs('#left').classList.remove('active');
+        qs('#keys').value = lastData.buttons[10];
+        qs('#modifiers').value = lastData.buttons[12];
         ipc.send('selectButton', '<12>');
       } else {
         qs('#right').classList.remove('active');
+        qs('#keys').value = lastData.buttons[11];
+        qs('#modifiers').value = lastData.buttons[13];
         ipc.send('selectButton', '<13>');
       }
       tab.classList.add('active');
-      var loader = qs('#settings-loader');
-      loader.style.pointerEvents = 'all';
-      fadeIn(loader);
     }));
   }
-
 
  /**
   *  RUN IT
   */
-  window.onload = loadRipples().then(loadGoogleFonts).then(getKeyMap).then(gotKeyMap).then(getModifers).then(gotModifiers).then(setupListeners);
+  window.onload = loadRipples()
+  .then(loadGoogleFonts)
+  .then(getKeyMap)
+  .then(gotKeyMap)
+  .then(getModifers)
+  .then(gotModifiers)
+  .then(setupListeners);
 }());

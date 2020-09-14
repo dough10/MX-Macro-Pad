@@ -2,8 +2,6 @@ var fs = require( 'fs' );
 var uglifyJS = require('uglify-es');
 var uglifycss = require('uglifycss');
 var minify = require('html-minifier').minify;
-var autoprefixer = require('autoprefixer');
-var postcss = require('postcss');
 
 
 const files = [
