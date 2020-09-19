@@ -56,7 +56,7 @@
 #define BUTTON_KEY14 0 // encoder left modifier default
 
 /*
-----------------------------------
+// ----------------------------------
           Lib Imports
 ----------------------------------
 */
@@ -64,8 +64,7 @@
 // i need <HID-Project.h> for media keys but it makes strange things happen.
 // i can't find a glossary of key decimal values
 // the key map i am using makes keyboard no work /shrug  (./src/keys.json has current key map)
-//#include <HID-Project.h>
-#include "Arduino.h"
+// #include <HID-Project.h>
 #include <Keyboard.h>
 #include <Encoder.h>
 #include <ArduinoJson.h>
@@ -86,11 +85,11 @@ void setup() {
   }
   Serial.begin(9600);
   Keyboard.begin();
-  for (int i = 0; i < 5; i++) {
+  for (byte i = 0; i < 5; i++) {
     pinMode(LED.leds[i], INPUT);
   }
   pinMode(FUNCT_KEY, INPUT_PULLUP);
-  for (int i = 0; i < NumButtons; i++) {
+  for (byte i = 0; i < NumButtons; i++) {
     pinMode(buttons[i].pin, INPUT_PULLUP);
   }
   DATA.init();
@@ -106,7 +105,7 @@ void loop() {
   // leds doing led stuff
   LED.doWork();
   // check if buttons are pressed
-  for (int i = 0; i < 5; i++) {
+  for (byte i = 0; i < 5; i++) {
     buttons[i + 5].update();
     buttons[i].update();
   }

@@ -28,33 +28,33 @@ class LED_Controller {
     };
 
     // change the mode of the LEDs
-    void setLEDMode(int mode) {
+    void setLEDMode(byte mode) {
       LED_MODE = mode;
     }
 
     // return LED_MODE
-    int getLEDMode() {
+    byte getLEDMode() {
       return LED_MODE;
     }
 
     // Set the brights of leds in mode 0
-    void setBrightness(int b) {
+    void setBrightness(byte b) {
       brightness = b;
     }
 
     // returns brightness of led in mode 0
-    int getBrightness() {
+    byte getBrightness() {
       return brightness;
     }
 
     // return the incirment led will be changed by when turning encoder
-    int getIncriment() {
+    byte getIncriment() {
       return brightnessIncriment;
     }
 
     // set all LED values @ once
-    void makeLight(int value) {
-      for (int i = 0; i < 5; i++) {
+    void makeLight(byte value) {
+      for (byte i = 0; i < 5; i++) {
         analogWrite(leds[i], value);
       }
     }
@@ -85,17 +85,17 @@ class LED_Controller {
     }
 
   private:
-    int LED_MODE = 0; // variable for changeing the LEDS light modes
+    byte LED_MODE = 0; // variable for changeing the LEDS light modes
 
     // knight rider Mode  https://www.youtube.com/watch?v=rhLejQ00sus your welcome
-    int currentLED = 3; // index of the led in the array currently having it's brightness value changed
-    int krIncriment = 51; // changeing this value changes the speed of leds
-    int krBrightness = 255 - krIncriment; // default brightness value
-    int changeBy = -1; // value to incriment led array index
+    byte currentLED = 3; // index of the led in the array currently having it's brightness value changed
+    byte krIncriment = 51; // changeing this value changes the speed of leds
+    byte krBrightness = 255 - krIncriment; // default brightness value
+    byte changeBy = -1; // value to incriment led array index
 
     // always on light mode
-    int brightness = 0; // adjustable brightness value
-    const int brightnessIncriment = 5; // 1 encoder click = this value in change of led brightness
+    byte brightness = 0; // adjustable brightness value
+    const byte brightnessIncriment = 5; // 1 encoder click = this value in change of led brightness
 
     // change lED and / or value
     void knightRider() {
@@ -114,11 +114,11 @@ class LED_Controller {
     }
 
     // on press led mode
-    int clickIncriment = 1;   // raising this value speeds up the led fade out
+    byte clickIncriment = 1;   // raising this value speeds up the led fade out
 
     // when you press it lights up WOW!!!
     void onPressLEDMODE() {
-      for (int i = 0; i < 5; i++) {
+      for (byte i = 0; i < 5; i++) {
         analogWrite(leds[i], brightnesses[i]);
         if (brightnesses[i] < 255) {
           brightnesses[i] = brightnesses[i] + clickIncriment;
@@ -127,8 +127,8 @@ class LED_Controller {
     }
 
     // breath LED Mode
-    int fadeBrightness = 1;
-    int fadeAmount = 1;
+    byte fadeBrightness = 1;
+    byte fadeAmount = 1;
 };
 
 LED_Controller   LED;

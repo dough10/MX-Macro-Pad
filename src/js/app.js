@@ -447,6 +447,8 @@
       qs('#right').classList.add('active');
       qs('#left').classList.remove('active');
       settings.style.display = 'flex';
+      keyNdx = keyIndex;
+      modNdx = modIndex;
       setTimeout(_ => {
         showSettings();
         animateElement(settings, 'translateY(0px)', 350).then(resolve).catch(reject);
@@ -541,9 +543,13 @@
       qs('#brightness').value = val;
       var precent = Math.round((val / 255) * 100);
       qs('#text').textContent = 'LED Brightness: ' + precent + '%';
+      for (var i = 0; i < data.buttons.length; i++) {
+        //console.log(data.buttons[i]);
+      }
+
     }
     catch {
-      console.error('Error Parsing Data' , data);
+      console.error(data);
     }
     lastData = data;
   }
@@ -579,14 +585,14 @@
   /**
    * Set the value of the button or encoder
    */
+  var keyNdx = 0;
+  var modNdx = 0;
   function setVal() {
     var val = addZeros(qs('#keys').value, 3);
     var mod = qs('#modifiers').value;
-    if (mod !== '0') {
-      mod = Number(mod) - 127;
-      val = '' + mod + val;
-    }
-    ipc.send('selectButton', '<' + val + '>');
+    lastData.buttons[keyNdx] = val;
+    lastData.buttons[modNdx] = mod;
+    ipc.send('selectButton', '<' + JSON.stringify(lastData) + '>');
     new Toast('Keybind Set', 0.8);
   }
 
@@ -622,7 +628,6 @@
    */
   function circleClick(e) {
     var num = e.target.id.substring(1);
-    ipc.send('selectButton', '<' + num + '>');
     openSettings(num);
   }
 
@@ -639,9 +644,7 @@
     qs('#setVal').onClick(setVal);
     qs('.circle').onClick(circleClick);
     qsa('.box').forEach(box => box.onClick(_ => {
-      // box.id[1] is the numbers @ the end of the clicked element ID
       var num = box.id[1];
-      ipc.send('selectButton', '<' + num + '>');
       openSettings(num);
     }));
     qsa('.tab').forEach(tab => tab.onClick(_ => {
@@ -652,12 +655,14 @@
         qs('#left').classList.remove('active');
         qs('#keys').value = lastData.buttons[10];
         qs('#modifiers').value = lastData.buttons[12];
-        ipc.send('selectButton', '<12>');
+        keyNdx = keyNdx - 1;
+        modNdx = modNdx - 1;
       } else {
         qs('#right').classList.remove('active');
         qs('#keys').value = lastData.buttons[11];
         qs('#modifiers').value = lastData.buttons[13];
-        ipc.send('selectButton', '<13>');
+        keyNdx = keyNdx + 1;
+        modNdx = modNdx + 1;
       }
       tab.classList.add('active');
     }));
