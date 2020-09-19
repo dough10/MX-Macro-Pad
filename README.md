@@ -11,7 +11,7 @@ Required software for Arduino development environment
 
 
 Steps to install development environment
-  - cd into directory "cd Mechanical-Macro-Pad"
+  - cd into directory "cd MX Macro-Pad"
   - run "npm install"
   - rebuild for electron compatibility './node_modules/.bin/electron-rebuild.cmd'
   - run "npm test" if all was successful the app will load in a electron window

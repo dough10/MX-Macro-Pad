@@ -19,9 +19,9 @@ class Knob_Control {
 
         // leds on adjustable mode and encoder click pressed
         if (!digitalRead(FUNCT_KEY) && LED.getLEDMode() == 0) {
-          int brightness = LED.getBrightness();
-          int brightnessIncriment = LED.getIncriment();
-          int lowest = 255 - brightnessIncriment;
+          byte brightness = LED.getBrightness();
+          byte brightnessIncriment = LED.getIncriment();
+          byte lowest = 255 - brightnessIncriment;
           // turn right
           if (newPosition > oldPosition) {
             // turn up the brightness
