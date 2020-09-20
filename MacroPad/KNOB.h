@@ -44,18 +44,26 @@ class Knob_Control {
           // turn right
           if (newPosition > oldPosition) {
             // press buttons
-            if (buttons[12].key) {
-              Keyboard.press(buttons[12].key);
+            if (buttons[19].key) {
+              Keyboard.press(buttons[19].key);
             }
-            Keyboard.press(buttons[10].key);
+            if (buttons[17].key) {
+              Keyboard.press(buttons[17].key);
+            }
+            Keyboard.press(buttons[15].key);
+            // Consumer.write(MEDIA_VOL_UP);
           }
           // turn left
           if (newPosition < oldPosition) {
             // press buttons
-            if (buttons[13].key) {
-              Keyboard.press(buttons[13].key);
+            if (buttons[20].key) {
+              Keyboard.press(buttons[20].key);
             }
-            Keyboard.press(buttons[11].key);
+            if (buttons[18].key) {
+              Keyboard.press(buttons[18].key);
+            }
+            Keyboard.press(buttons[16].key);
+            // Consumer.write(MEDIA_VOL_DOWN);
           }
         }
         oldPosition = newPosition;

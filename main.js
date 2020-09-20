@@ -13,6 +13,7 @@ function createWindow () {
     height: 320,
     resizable: false,
     webPreferences: {
+      worldSafeExecuteJavaScript: true,
       nodeIntegration: true
     }
   })

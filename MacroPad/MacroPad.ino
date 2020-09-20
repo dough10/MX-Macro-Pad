@@ -45,18 +45,25 @@
 #define BUTTON_KEY3 242 // button 3 default
 #define BUTTON_KEY4 243 // button 4 default
 #define BUTTON_KEY5 244 // button 5 default
-#define BUTTON_KEY6 0 // button 1 modifier default
-#define BUTTON_KEY7 0 // button 2 modifier default
-#define BUTTON_KEY8 0 // button 3 modifier default
-#define BUTTON_KEY9 0 // button 4 modifier default
-#define BUTTON_KEY10 0 // button 5 modifier default
-#define BUTTON_KEY11 215 // encoder right default
-#define BUTTON_KEY12 216 // encoder left default
-#define BUTTON_KEY13 0 // encoder right modifier default
-#define BUTTON_KEY14 0 // encoder left modifier default
+#define BUTTON_KEY6 0 // button 1 modifier 1 default
+#define BUTTON_KEY7 0 // button 2 modifier 1 default
+#define BUTTON_KEY8 0 // button 3 modifier 1 default
+#define BUTTON_KEY9 0 // button 4 modifier 1 default
+#define BUTTON_KEY10 0 // button 5 modifier 1 default
+#define BUTTON_KEY11 0 // button 1 modifier 2 default
+#define BUTTON_KEY12 0 // button 2 modifier 2 default
+#define BUTTON_KEY13 0 // button 3 modifier 2 default
+#define BUTTON_KEY14 0 // button 4 modifier 2 default
+#define BUTTON_KEY15 0 // button 5 modifier 2 default
+#define BUTTON_KEY16 215 // encoder right default
+#define BUTTON_KEY17 216 // encoder left default
+#define BUTTON_KEY18 0 // encoder right modifier default
+#define BUTTON_KEY19 0 // encoder left modifier default
+#define BUTTON_KEY20 0 // encoder left modifier default
+#define BUTTON_KEY21 0 // encoder left modifier default
 
 /*
-// ----------------------------------
+----------------------------------
           Lib Imports
 ----------------------------------
 */
@@ -84,6 +91,8 @@ void setup() {
     failsafe();
   }
   Serial.begin(9600);
+  // Consumer.begin();
+  // BootKeyboard.begin();
   Keyboard.begin();
   for (byte i = 0; i < 5; i++) {
     pinMode(LED.leds[i], INPUT);
@@ -106,6 +115,7 @@ void loop() {
   LED.doWork();
   // check if buttons are pressed
   for (byte i = 0; i < 5; i++) {
+    buttons[i + 10].update();
     buttons[i + 5].update();
     buttons[i].update();
   }
