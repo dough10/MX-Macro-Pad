@@ -22,7 +22,7 @@ class Data_Controler {
       }
       LED.setBrightness(doc["brightness"]);
       LED.setLEDMode(doc["LED_MODE"]);
-      for (byte i = 0; i < 14; i++) {
+      for (byte i = 0; i < 21; i++) {
         buttons[i].key = doc["buttons"][i];
       }
       cFile.close();
@@ -53,8 +53,8 @@ class Data_Controler {
     }
 
   private:
-    const size_t objectCapacity = JSON_ARRAY_SIZE(14) + JSON_OBJECT_SIZE(3) + 40;
-    char receivedChars[100]; // array for catching the JSON string from Serial
+    const size_t objectCapacity = JSON_ARRAY_SIZE(21) + JSON_OBJECT_SIZE(3) + 40;
+    char receivedChars[150]; // array for catching the JSON string from Serial
     boolean newData = false; // flag for detecting when new data is complete
     byte lastI = 0; // index of the last button requested by UI
     const char *filename = "/config.txt";
@@ -73,8 +73,8 @@ class Data_Controler {
           if (rc != endMarker) {
             receivedChars[ndx] = rc;
             ndx++;
-            if (ndx >= 100) {
-              ndx = 100 - 1;
+            if (ndx >= 150) {
+              ndx = 150 - 1;
             }
           }
           else {
@@ -93,6 +93,7 @@ class Data_Controler {
     // processs incomming JSON object from UI
     void processData() {
       if (newData == true) {
+        newData = false;
         DynamicJsonDocument doc(objectCapacity);
         DeserializationError error = deserializeJson(doc, receivedChars);
         if (error) {
@@ -103,11 +104,10 @@ class Data_Controler {
           lstMode = doc["LED_MODE"];
           LED.setLEDMode(doc["LED_MODE"]);
         }
-        for (byte i = 0; i < 14; i++) {
+        for (byte i = 0; i < 21; i++) {
           buttons[i].key = doc["buttons"][i];
         }
         saveConfig();
-        newData = false;
       }
     }
 
@@ -117,7 +117,7 @@ class Data_Controler {
       doc["brightness"] = LED.getBrightness();
       doc["LED_MODE"] = LED.getLEDMode();
       JsonArray data = doc.createNestedArray("buttons");
-      for (byte i = 0; i < 14; i++) {
+      for (byte i = 0; i < 21; i++) {
         data.add(buttons[i].key);
       }
       // Update sd card data

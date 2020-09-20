@@ -423,32 +423,38 @@
   function openSettings(page) {
     return new Promise((resolve, reject) => {
       page = Number(page);
+      console.log(page);
       const settings = qs('#settings');
       const header = qs('#settingHeader');
       const tabs = qs('#tabs');
       const card = qs('#settingsCard');
       var keyIndex;
-      var modIndex;
+      var mod1Index;
+      var mod2Index;
       if (page > 6) {
-        keyIndex = page - 2;
-        modIndex = page;
+        keyIndex = page - 1;
+        mod1Index = page + 1;
+        mod2Index = page + 3;
         card.style.paddingTop = '0px';
         tabs.style.display = 'block';
         header.textContent = 'Encoder Config';
       } else {
         keyIndex = page - 1;
-        modIndex = keyIndex + 5;
+        mod1Index = keyIndex + 5;
+        mod2Index = keyIndex + 10;
         card.style.removeProperty('padding-top');
         tabs.style.display = 'none';
         header.textContent = 'Button ' + page + ' Config';
       }
+      keyNdx = keyIndex;
+      mod1Ndx = mod1Index;
+      mod2Ndx = mod2Index;
       qs('#keys').value = lastData.buttons[keyIndex];
-      qs('#modifiers').value = lastData.buttons[modIndex];
+      qs('#modifier1').value = lastData.buttons[mod1Index];
+      qs('#modifier2').value = lastData.buttons[mod2Index];
       qs('#right').classList.add('active');
       qs('#left').classList.remove('active');
       settings.style.display = 'flex';
-      keyNdx = keyIndex;
-      modNdx = modIndex;
       setTimeout(_ => {
         showSettings();
         animateElement(settings, 'translateY(0px)', 350).then(resolve).catch(reject);
@@ -464,7 +470,8 @@
       settings.style.display = 'none';
       var loader = qs('#settings-loader');
       loader.style.pointerEvents = 'all';
-      qs('#modifiers').value = 'No Modifier';
+      qs('#modifier1').value = 'No Modifier';
+      qs('#modifier2').value = 'No Modifier';
       fadeIn(loader);
     });
   }
@@ -512,7 +519,7 @@
   var lastData;
   var led_mode = 0;
   function processData(e, data) {
-    //console.log(data);
+    console.log(data);
     // port data for connecting the app
     if (typeof data !== 'string' && Array.isArray(data)) {
       selectPort(data);
@@ -540,16 +547,13 @@
             new Toast('LED: Off', 0.8);
         }
       }
-      qs('#brightness').value = val;
+      if (qs('#brightness').value !== val) {
+        qs('#brightness').value = val;
+      }
       var precent = Math.round((val / 255) * 100);
       qs('#text').textContent = 'LED Brightness: ' + precent + '%';
-      for (var i = 0; i < data.buttons.length; i++) {
-        //console.log(data.buttons[i]);
-      }
-
-    }
-    catch {
-      console.error(data);
+    } catch(err) {
+      console.error(err);
     }
     lastData = data;
   }
@@ -568,31 +572,22 @@
     parent.appendChild(el);
   }
 
- /**
-  * add leading zeros
-  *
-  * @param {Number} thing - the number to add check for the need of more 0's
-  * @param {Number} length - the required length of the number
-  */
-  function addZeros(thing, length) {
-    if (thing.length !== length) {
-      thing = '0' + thing;
-      return addZeros(thing, length);
-    }
-    return thing;
-  }
-
   /**
    * Set the value of the button or encoder
    */
   var keyNdx = 0;
-  var modNdx = 0;
+  var mod1Ndx = 0;
+  var mod2Ndx = 0;
   function setVal() {
-    var val = addZeros(qs('#keys').value, 3);
-    var mod = qs('#modifiers').value;
+    var val = Number(qs('#keys').value, 3);
+    var mod1 = Number(qs('#modifier1').value);
+    var mod2 = Number(qs('#modifier2').value);
     lastData.buttons[keyNdx] = val;
-    lastData.buttons[modNdx] = mod;
-    ipc.send('selectButton', '<' + JSON.stringify(lastData) + '>');
+    lastData.buttons[mod1Ndx] = mod1;
+    lastData.buttons[mod2Ndx] = mod2;
+    var json = JSON.stringify(lastData);
+    ipc.send('selectButton', '<' + json + '>');
+    console.log(json)
     new Toast('Keybind Set', 0.8);
   }
 
@@ -616,7 +611,8 @@
     return new Promise((resolve, reject) => {
       var response = e.target.response;
       for (var key in response) {
-        makeOption(key, response[key], qs('#modifiers'));
+        makeOption(key, response[key], qs('#modifier1'));
+        makeOption(key, response[key], qs('#modifier2'));
       }
       resolve();
     });
@@ -653,16 +649,20 @@
       }
       if (tab.id === 'right') {
         qs('#left').classList.remove('active');
-        qs('#keys').value = lastData.buttons[10];
-        qs('#modifiers').value = lastData.buttons[12];
+        qs('#keys').value = lastData.buttons[15];
+        qs('#modifier1').value = lastData.buttons[17];
+        qs('#modifier2').value = lastData.buttons[19];
         keyNdx = keyNdx - 1;
-        modNdx = modNdx - 1;
+        mod1Ndx = mod1Ndx - 1;
+        mod2Ndx = mod2Ndx - 1;
       } else {
         qs('#right').classList.remove('active');
-        qs('#keys').value = lastData.buttons[11];
-        qs('#modifiers').value = lastData.buttons[13];
+        qs('#keys').value = lastData.buttons[16];
+        qs('#modifier1').value = lastData.buttons[18];
+        qs('#modifier2').value = lastData.buttons[20];
         keyNdx = keyNdx + 1;
-        modNdx = modNdx + 1;
+        mod1Ndx = mod1Ndx + 1;
+        mod2Ndx = mod2Ndx + 1;
       }
       tab.classList.add('active');
     }));

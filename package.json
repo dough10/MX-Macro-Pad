@@ -18,7 +18,8 @@
   },
   "scripts": {
     "start": "electron ./main.js",
-    "test": "electron ./test.js"
+    "test": "electron ./test.js",
+    "tst": "electron ./test.js"
   },
   "author": "",
   "license": "ISC"
