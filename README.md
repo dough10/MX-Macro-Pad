@@ -1,7 +1,20 @@
 # MX Macro-Pad
 open source "Pikatea Macropad Clone"
-A Macro Pad made with Cherry MX switches with pre switch LEDs 1 encoder and a SD card reader for data storage based on a Arduino Micro. Includes a electron html5 UI for changing key binds.
+A Macro Pad made with Cherry MX switches pre switch 3mm LEDs 1 encoder and a SD card reader for data storage based on a Arduino Micro. Includes a electron html5 UI for changing key binds.
 
+
+This is my first Arduino project and would love some help / guidance on what has to be some pretty inefficient code.
+
+all pin settings for Arduino project are in the MacroPad.ino file.
+
+
+This macro pad can do up to 3 button macro's. I would like to include the option to use media keys. It appears I have over estimated the capabilities of the Arduino micro. When HID lib in enabled I can not upload the script using the Arduino editor. 102% of flash. =(  for the lib to work I think I would also need to change the key values to Strings in place of using the decimal values.
+
+
+I have included the schematic I used to build my project.
+https://github.com/dough10/MX-Macro-Pad/blob/master/Project%20Schematic/Schematic_mx%20macro_2020-09-13_10-54-19.pdf
+
+In future I will include any template files I make such as files for CNC cutting / Gerber files.
 
 
 all pin settings for Arduino project are in the MacroPad.ino file.
