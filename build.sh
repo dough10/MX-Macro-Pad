@@ -39,18 +39,17 @@ else
     mkdir ./html/fonts
 fi
 
-# remove old windows app folder
-if [ -d "./Configurator-win32-x64" ]
-then
-    echo "clean up old version of windows app"
-    rm -r ./Configurator-win32-x64
-else
-    echo "no old version of windows app to clean up"
-fi
-
 echo "minifying html5 app files"
 node build.js
 
 echo "build windows app"
-electron-packager . Configurator --platform=win32 --arch=x64
+npm run package-win64
+
+echo "build linux app"
+npm run package-linux64
+
+echo "build mac app"
+npm run package-mac64
+
+
 echo "build complete"

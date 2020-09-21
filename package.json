@@ -19,7 +19,9 @@
   "scripts": {
     "start": "electron ./main.js",
     "test": "electron ./test.js",
-    "tst": "electron ./test.js"
+    "package-win64": "electron-zip-packager . Configurator --overwrite --asar --platform=win32 --arch=x64 --prune=true --out=release-builds",
+    "package-mac64": "electron-packager . Configurator --overwrite --asar --platform=darwin --arch=x64 --prune=true --out=release-builds",
+    "package-linux64": "electron-zip-packager . Configurator --overwrite --asar --platform=linux --arch=x64 --prune=true --out=release-builds"
   },
   "author": "",
   "license": "ISC"
