@@ -30,7 +30,7 @@ class Data_Controler {
 
     void checkForData() {
       receiveData();
-      processData();
+      processReceivedData();
     }
 
     // make data great again
@@ -91,7 +91,7 @@ class Data_Controler {
     }
 
     // processs incomming JSON object from UI
-    void processData() {
+    void processReceivedData() {
       if (newData == true) {
         newData = false;
         DynamicJsonDocument doc(objectCapacity);

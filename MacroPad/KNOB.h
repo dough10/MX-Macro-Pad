@@ -51,7 +51,6 @@ class Knob_Control {
               Keyboard.press(buttons[17].key);
             }
             Keyboard.press(buttons[15].key);
-            // Consumer.write(MEDIA_VOL_UP);
           }
           // turn left
           if (newPosition < oldPosition) {
@@ -63,7 +62,6 @@ class Knob_Control {
               Keyboard.press(buttons[18].key);
             }
             Keyboard.press(buttons[16].key);
-            // Consumer.write(MEDIA_VOL_DOWN);
           }
         }
         oldPosition = newPosition;

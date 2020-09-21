@@ -416,14 +416,12 @@
     });
   }
 
-
  /**
   * open button setting panel
   */
   function openSettings(page) {
     return new Promise((resolve, reject) => {
       page = Number(page);
-      console.log(page);
       const settings = qs('#settings');
       const header = qs('#settingHeader');
       const tabs = qs('#tabs');
@@ -519,7 +517,7 @@
   var lastData;
   var led_mode = 0;
   function processData(e, data) {
-    console.log(data);
+    // console.log(data);
     // port data for connecting the app
     if (typeof data !== 'string' && Array.isArray(data)) {
       selectPort(data);
@@ -587,7 +585,6 @@
     lastData.buttons[mod2Ndx] = mod2;
     var json = JSON.stringify(lastData);
     ipc.send('selectButton', '<' + json + '>');
-    console.log(json)
     new Toast('Keybind Set', 0.8);
   }
 
