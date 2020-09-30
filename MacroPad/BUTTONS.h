@@ -13,6 +13,7 @@ class button {
     const uint8_t pin;
     button(uint8_t k, uint8_t p) : key(k), pin(p) {}
     void press(boolean state) {
+      // cancel press if key not bound
       if (key == 0) {
         return;
       }
@@ -22,7 +23,7 @@ class button {
       }
       byte led_mode = LED.getLEDMode();
       bool functKeyPress = !digitalRead(FUNCT_KEY);
-      // if the if is the if
+      // checke LED mode and if function button is held
       if (state && functKeyPress) {
         // button 1 sets LEDs to adjustable brightness mode
         if (pin == A0 && led_mode != 0) {
@@ -40,13 +41,13 @@ class button {
           LED.setLEDMode(2);
           return;
         }
-        // knight rider mode
+        // button 4 sets knight rider mode
         if (pin == A3 && led_mode != 3) {
           LED.setLEDMode(3);
           LED.makeLight(255);
           return;
         }
-        // LED off mode
+        // button 5 sets LED mode off
         if (pin == A4 && led_mode != 4) {
           LED.setLEDMode(4);
           LED.makeLight(255);
