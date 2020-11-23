@@ -14,8 +14,6 @@ This macro pad can do up to 3 button macro's. I would like to include the option
 I have included the schematic I used to build my project.
 https://github.com/dough10/MX-Macro-Pad/blob/master/Project%20Schematic/Schematic_mx%20macro_2020-09-13_10-54-19.pdf
 
-In future I will include any template files I make such as files for CNC cutting / Gerber files.
-
 Required software for UI development environment
   - Nodejs
   - NPM
