@@ -14,7 +14,8 @@
   },
   "devDependencies": {
     "electron": "^9.3.1",
-    "electron-rebuild": "^1.11.0"
+    "electron-rebuild": "^1.11.0",
+    "version-incrementer": "^0.1.1"
   },
   "scripts": {
     "start": "electron ./main.js",

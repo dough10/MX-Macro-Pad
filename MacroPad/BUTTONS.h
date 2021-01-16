@@ -1,4 +1,4 @@
-/*
+/**
 ----------------------------------
           BUTTONS!!!!
 ----------------------------------
@@ -90,7 +90,7 @@ class button {
   private:
     const long debounceTime = 60;
     unsigned long lastPressed;
-    boolean pressed = 0;
+    bool pressed = 0;
 } ;
 
 // Button objects, organized in array
