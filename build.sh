@@ -46,10 +46,8 @@ echo "build windows app"
 npm run package-win64
 
 echo "build linux app"
-npm run package-linux64
+npm run package-linuxArm
 
-echo "build mac app"
-npm run package-mac64
 
 
 echo "build complete"
