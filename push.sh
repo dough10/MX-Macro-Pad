@@ -5,7 +5,7 @@ if [ "$2" == "+" ]
   else
     v=$(node -p "require('./package.json').version");
 fi
-# d=$(date +%s);
+sh build.sh
 echo "$1, V: $v";
 git add .;
 git commit -m "$1, V: $v";
