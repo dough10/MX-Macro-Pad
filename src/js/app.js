@@ -3,14 +3,14 @@
   * shortcut function for document.querySelector()
   */
   function qs(selector, scope) {
-    return (scope || document).querySelector(selector)
+    return (scope || document).querySelector(selector);
   }
 
  /**
   * shortcut function for document.querySelectorAll()
   */
   function qsa(selector, scope) {
-    return (scope || document).querySelectorAll(selector)
+    return (scope || document).querySelectorAll(selector);
   }
 
  /**
@@ -498,7 +498,7 @@
             new Toast('Error Connecting');
             setTimeout(_ => {
               ipc.send('conError', 'Timed Out');
-            }, 4500)
+            }, 4500);
             return;
           }
           // show app UI
@@ -524,7 +524,7 @@
       return;
     }
     try {
-      data = JSON.parse(data)
+      data = JSON.parse(data);
       var val = 255 - data.brightness;
       if (data.LED_MODE !== led_mode) {
         led_mode = data.LED_MODE;

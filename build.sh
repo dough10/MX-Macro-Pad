@@ -42,12 +42,4 @@ fi
 echo "minifying html5 app files"
 node build.js
 
-echo "build windows app"
-npm run package-win64
-
-echo "build linux app"
-npm run package-linuxArm
-
-
-
 echo "build complete"
