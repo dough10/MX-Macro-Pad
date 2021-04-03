@@ -484,27 +484,33 @@
     });
   }
 
+  /**
+   * opens the port and waits to see if there is a  data stream 
+   */
+  function checkConnection() {
+    lastData = 0;
+    setTimeout(() => {
+      // no data close port.
+      if (!lastData) {
+        new Toast('Error Connecting');
+        setTimeout(_ => {
+          ipc.send('conError', 'Timed Out');
+        }, 4500);
+        return;
+      }
+      // show app UI
+      animateElement(qs('#loader'), 'translateY(-102%)', 350);
+    }, 2000);
+  }
+
+
  /**
   * sends oprt to the backend for connection and waits for data stream
   */
   function selectPort(ports) {
     for (var i = 0; i < ports.length; i++) {
       ipc.send('selectPort', ports[i]);
-      ipc.once('portOpen', (event, response) => {
-        lastData = 0;
-        setTimeout(() => {
-          // no data close port.
-          if (!lastData) {
-            new Toast('Error Connecting');
-            setTimeout(_ => {
-              ipc.send('conError', 'Timed Out');
-            }, 4500);
-            return;
-          }
-          // show app UI
-          animateElement(qs('#loader'), 'translateY(-102%)', 350);
-        }, 2000);
-      });
+      ipc.once('portOpen', checkConnection);
     }
   }
 
