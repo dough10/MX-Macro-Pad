@@ -23,6 +23,10 @@ function copyFile(filePath) {
 function minifyHTML() {
   return new Promise((resolve, reject) => {
     fs.readFile('./src/index.html', 'utf8', (err, html) => {
+      if (err) {
+        reject(err);
+        return;
+      }
       var smallHTML = minify(html, {
         removeAttributeQuotes: true,
         collapseWhitespace: true,
@@ -39,9 +43,13 @@ function minifyHTML() {
 function uglifyJavaScript() {
   return new Promise((resolve, reject) => {
     fs.readFile('./src/js/app.js', 'utf8', (err, js) => {
+      if (err) {
+        reject(err);
+        return;
+      }
       var uglyCode = uglifyJS.minify(js);
       if (uglyCode.error) {
-        console.log(uglyCode.error)
+        console.log(uglyCode.error);
         return;
       }
       fs.writeFile( './html/js/app.js', uglyCode.code, resolve);
@@ -51,7 +59,7 @@ function uglifyJavaScript() {
 
 
 function uglyCSS() {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     var uglified = uglifycss.processFiles(
         [
           './src/css/base.css'
