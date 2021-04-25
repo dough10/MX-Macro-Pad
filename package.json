@@ -1,6 +1,6 @@
 {
   "name": "macroconfigurator",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "configure macro pad",
   "main": "main.js",
   "dependencies": {
