@@ -1,6 +1,6 @@
 {
   "name": "macroconfigurator",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "configure macro pad",
   "main": "main.js",
   "dependencies": {
@@ -21,7 +21,7 @@
   "scripts": {
     "start": "electron ./main.js",
     "test": "electron ./test.js",
-    "Build Application": "sh build.sh"
+    "Build": "sh build.sh"
   },
   "author": "",
   "license": "ISC"
