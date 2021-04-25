@@ -1,4 +1,25 @@
 #!/bin/sh
+PS3="Choose keymap: "
+maps=("Openauto pro" "Default" "Quit")
+select m in "${maps[@]}"; do
+    case $m in 
+        "Openauto pro")
+            echo "Using Openauto pro keymap"
+            cp "for car pi"/keys.json src/keys.json
+            break
+            ;;
+        "Default")
+            echo "Using Default keymap"
+            cp "default keys"/keys.json src/keys.json
+            break
+            ;;
+        "Quit")
+            echo "Exiting"
+            exit
+            break
+            ;;
+    esac
+done
 
 # check  if need to create html folder
 if [ -d "./html" ]
@@ -38,8 +59,33 @@ else
     echo "Creating html/fonts folder"
     mkdir ./html/fonts
 fi
+        
 
 echo "minifying html5 app files"
-node build.js
+node modules/build.js
 
-echo "build complete"
+echo "Application build complete"
+
+PS3="Select OS Package: "
+maps=("Windows" "ARM" "Quit")
+select m in "${maps[@]}"; do
+    case $m in 
+        "Windows")
+            echo "Creating Windows build"
+            electron-zip-packager . Configurator --overwrite --asar --platform=win32 --arch=x64 --prune=true --out=release-builds
+            break
+            ;;
+        "Default")
+            echo "Creating ARM build"
+            electron-zip-packager . Configurator --overwrite --asar --platform=linux --arch=armv7l --prune=true --out=release-builds
+            break
+            ;;
+        "Quit")
+            echo "Exiting"
+            exit
+            break
+            ;;
+    esac
+done
+
+echo "Application build complete"

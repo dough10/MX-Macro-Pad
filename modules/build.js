@@ -16,12 +16,14 @@ const files = [
 
 
 function copyFile(filePath) {
+  console.log(`moving ${filePath} to HTML folder`);
   fs.createReadStream(`./src/${filePath}`).pipe(fs.createWriteStream(`./html/${filePath}`));
 }
 
 
 function minifyHTML() {
   return new Promise((resolve, reject) => {
+    console.log('Concatinating/Minifying HTML');
     fs.readFile('./src/index.html', 'utf8', (err, html) => {
       if (err) {
         reject(err);
@@ -34,6 +36,7 @@ function minifyHTML() {
         minifyURLs: true,
         removeComments: true
       });
+      console.log('/html/index.html has been saved');
       fs.writeFile( './html/index.html', smallHTML, resolve);
     });
   });
@@ -42,6 +45,7 @@ function minifyHTML() {
 
 function uglifyJavaScript() {
   return new Promise((resolve, reject) => {
+    console.log('Concatinating/Minifying Javascript');
     fs.readFile('./src/js/app.js', 'utf8', (err, js) => {
       if (err) {
         reject(err);
@@ -52,6 +56,7 @@ function uglifyJavaScript() {
         console.log(uglyCode.error);
         return;
       }
+      console.log('/html/js/app.js has been saved');
       fs.writeFile( './html/js/app.js', uglyCode.code, resolve);
     });
   });
@@ -60,6 +65,7 @@ function uglifyJavaScript() {
 
 function uglyCSS() {
   return new Promise(resolve => {
+    console.log('Concatinating/Minifying Stylesheets');
     var uglified = uglifycss.processFiles(
         [
           './src/css/base.css'
@@ -69,9 +75,8 @@ function uglyCSS() {
           expandVars: true
         }
     );
-    fs.writeFile( './html/css/base.css', uglified, _ => {
-      resolve();
-    });
+    console.log('/html/css/base.css has been saved');
+    fs.writeFile( './html/css/base.css', uglified, resolve);
   });
 }
 
