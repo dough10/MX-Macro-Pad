@@ -2,7 +2,7 @@
 
 CODE='\033['
 
-black$CODE'0;30m'
+BLACK=$CODE'0;30m'
 RED=$CODE'0;31m'
 GREEN=$CODE'0;32m'
 ORANGE=$CODE'0;33m'
