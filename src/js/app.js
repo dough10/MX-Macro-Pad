@@ -650,7 +650,7 @@
     qs('.circle').onClick(circleClick);
     qs('#flip').onClick(_ => {
       reverseChildren(qs('#interface'));
-      localStorage.orentation = (localStorage.orentation === '1') ? 0 : 1;
+      localStorage.orentation = (Number(localStorage.orentation)) ? 0 : 1;
     });
     qsa('.box').forEach(box => box.onClick(_ => {
       var num = box.id[1];
@@ -693,6 +693,6 @@
   .then(gotModifiers)
   .then(setupListeners)
   .then(_ => {
-    if (localStorage.orentation === '1') reverseChildren(qs('#interface'));
+    if (Number(localStorage.orentation)) reverseChildren(qs('#interface'));
   });
 }());

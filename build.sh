@@ -20,12 +20,12 @@ select m in "${maps[@]}"; do
     case $m in 
         "Openauto pro")
             echo -e "Using ${BLUE}Openauto pro${NC} keymap"
-            cp "for car pi"/keys.json src/keys.json
+            cp keymaps/oap.json src/keys.json./push.sh 'U: '
             break
             ;;
         "Default")
             echo -e "Using ${BLUE}Default${NC} keymap"
-            cp "default keys"/keys.json src/keys.json
+            cp keymaps/default.json src/keys.json
             break
             ;;
         "Quit")
