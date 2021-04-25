@@ -21,7 +21,7 @@
   "scripts": {
     "start": "electron ./main.js",
     "test": "electron ./test.js",
-    "Build": "sh build.sh"
+    "Build": "./build.sh"
   },
   "author": "",
   "license": "ISC"
