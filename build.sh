@@ -64,9 +64,9 @@ fi
 echo "minifying html5 app files"
 node modules/build.js
 
-echo "Application build complete"
+echo "File Processing complete"
 
-PS3="Select OS Package: "
+PS3="Select OS: "
 maps=("Windows" "ARM" "Quit")
 select m in "${maps[@]}"; do
     case $m in 
@@ -75,8 +75,8 @@ select m in "${maps[@]}"; do
             electron-zip-packager . Configurator --overwrite --asar --platform=win32 --arch=x64 --prune=true --out=release-builds
             break
             ;;
-        "Default")
-            echo "Creating ARM build"
+        "ARM")
+            echo "Creating ARMV71 build"
             electron-zip-packager . Configurator --overwrite --asar --platform=linux --arch=armv7l --prune=true --out=release-builds
             break
             ;;
