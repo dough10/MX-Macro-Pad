@@ -76,15 +76,13 @@ class Data_Controler {
             if (ndx >= 150) {
               ndx = 150 - 1;
             }
-          }
-          else {
+          } else {
             receivedChars[ndx] = '\0'; // terminate the string
             recvInProgress = false;
             ndx = 0;
             newData = true;
           }
-        }
-        else if (rc == startMarker) {
+        } else if (rc == startMarker) {
           recvInProgress = true;
         }
       }

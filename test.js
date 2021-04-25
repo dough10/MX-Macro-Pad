@@ -16,16 +16,16 @@ function createWindow () {
       worldSafeExecuteJavaScript: true,
       nodeIntegration: true
     }
-  })
+  });
   win.removeMenu();
   win.loadFile('src/index.html');
-  let contents = win.webContents
-  contents.openDevTools()
+  let contents = win.webContents;
+  contents.openDevTools();
   /*-- gets a array of avaliable COM ports and sends to app.js--*/
   getPortsList().then((ports) => {
     setTimeout(() => {
-      contents.send('data', ports)
-    }, 1000)
+      contents.send('data', ports);
+    }, 1000);
   });
   /*-- selecting port for serial --*/
   ipc.on('selectPort', (event, portNum) => {
@@ -55,12 +55,12 @@ function createWindow () {
 app.whenReady().then(createWindow);
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    app.quit()
+    app.quit();
   }
 });
 app.on('activate', () => {
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow()
+    createWindow();
   }
 });
 

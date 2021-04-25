@@ -362,6 +362,12 @@
     return `${url}?${query}`;
   }
 
+  function reverseChildren(parent) {
+    for (var i = 1; i < parent.childNodes.length; i++){
+      parent.insertBefore(parent.childNodes[i], parent.firstChild);
+    }
+  }
+
  /**
   * determine if a url has a query string already attached
   */
@@ -642,6 +648,10 @@
     qs('#closeSettings').onClick(closeSettings);
     qs('#setVal').onClick(setVal);
     qs('.circle').onClick(circleClick);
+    qs('#flip').onClick(_ => {
+      reverseChildren(qs('#interface'));
+      localStorage.orentation = (localStorage.orentation === '1') ? 0 : 1;
+    });
     qsa('.box').forEach(box => box.onClick(_ => {
       var num = box.id[1];
       openSettings(num);
@@ -669,6 +679,7 @@
       }
       tab.classList.add('active');
     }));
+    return;
   }
 
  /**
@@ -680,5 +691,8 @@
   .then(gotKeyMap)
   .then(getModifers)
   .then(gotModifiers)
-  .then(setupListeners);
+  .then(setupListeners)
+  .then(_ => {
+    if (localStorage.orentation === '1') reverseChildren(qs('#interface'));
+  });
 }());
