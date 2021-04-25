@@ -19,6 +19,7 @@
     "version-incrementer": "^0.1.1"
   },
   "scripts": {
+    "rebuild": "./node_modules/.bin/electron-rebuild",
     "start": "electron ./main.js",
     "test": "electron ./test.js",
     "Build": "./build.sh"
