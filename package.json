@@ -4,6 +4,7 @@
   "description": "configure macro pad",
   "main": "main.js",
   "dependencies": {
+    "colors": "^1.4.0",
     "electron-packager": "^15.1.0",
     "electron-unhandled": "^3.0.2",
     "html-minifier": "^4.0.0",
