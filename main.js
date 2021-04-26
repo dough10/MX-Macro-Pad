@@ -23,9 +23,7 @@ function createWindow () {
   //contents.openDevTools()
   /*-- gets a array of avaliable COM ports and sends to app.js--*/
   getPortsList().then((ports) => {
-    setTimeout(() => {
-      contents.send('data', ports);
-    }, 1000);
+    contents.send('data', ports);
   });
   /*-- selecting port for serial --*/
   ipc.on('selectPort', (event, portNum) => {
@@ -69,9 +67,9 @@ function getPortsList () {
   return new Promise((resolve, reject) => {
     var portsList = [];
     SerialPort.list().then((ports) => {
-      ports.forEach((port) => {
-        portsList.push(port.path);
-      });
+      for (let i = 0; i < ports.length; i++) {
+        portsList.push(ports[i].path);
+      }
       resolve(portsList);
     });
   });
