@@ -19,7 +19,7 @@ select m in "${maps[@]}"; do
     case $m in 
         "Openauto pro")
             echo -e "Using ${BLUE}Openauto pro${NC} keymap"
-            cp keymaps/oap.json src/keys.json./push.sh 'U: '
+            cp keymaps/oap.json src/keys.json
             break
             ;;
         "Default")
