@@ -58,7 +58,7 @@ class Data_Controler {
     boolean newData = false; // flag for detecting when new data is complete
     byte lastI = 0; // index of the last button requested by UI
     const char *filename = "/config.txt";
-    byte lstMode = LED.getLEDMode();  // by getting current mode from LED class we avoid unneeded save on bootup
+    byte lstMode = LED.getLEDMode(); 
 
     // looking for data from UI
     void receiveData() {
@@ -95,7 +95,6 @@ class Data_Controler {
         DynamicJsonDocument doc(objectCapacity);
         DeserializationError error = deserializeJson(doc, receivedChars);
         if (error) {
-          newData = false;
           return;
         }
         if (doc["LED_MODE"] != lstMode) {

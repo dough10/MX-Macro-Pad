@@ -1,7 +1,6 @@
 #!/bin/bash
 
 CODE='\033['
-
 BLACK=$CODE'0;30m'
 RED=$CODE'0;31m'
 GREEN=$CODE'0;32m'
