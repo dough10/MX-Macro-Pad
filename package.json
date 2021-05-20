@@ -23,7 +23,7 @@
     "rebuild": "./node_modules/.bin/electron-rebuild",
     "start": "electron ./main.js",
     "test": "electron ./test.js",
-    "Build": "./build.sh"
+    "Build": "sh build.sh"
   },
   "author": "",
   "license": "ISC"
