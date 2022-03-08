@@ -113,6 +113,9 @@
 #include "DATA.h"
 #include "KNOB.h"
 
+byte lastRan = millis();
+
+
 // get shit ready
 void setup() {
   // Safety check. Ground pin #1 (RX) to cancel keyboard inputs.
@@ -152,6 +155,10 @@ void loop() {
     buttons[i].update();
   }
   // update UI / save to sd card if something has changed
+  if ((millis() - lastRan  <= 100)) {
+    return;
+  }
+  lastRan - millis();
   DATA.printJSON();
 }
 

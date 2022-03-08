@@ -23,7 +23,9 @@ function createWindow () {
   //contents.openDevTools()
   /*-- gets a array of avaliable COM ports and sends to app.js--*/
   getPortsList().then((ports) => {
-    contents.send('data', ports);
+    setTimeout(() => {
+      contents.send('data', ports);
+    }, 4000);
   });
   /*-- selecting port for serial --*/
   ipc.on('selectPort', (event, portNum) => {

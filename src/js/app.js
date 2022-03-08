@@ -506,7 +506,7 @@
       }
       // show app UI
       animateElement(qs('#loader'), 'translateY(-102%)', 350);
-    }, 2000);
+    }, 1000);
   }
 
 
@@ -514,7 +514,7 @@
   * sends oprt to the backend for connection and waits for data stream
   */
   function selectPort(ports) {
-    for (var i = 0; i < ports.length; i++) {
+    for (var i = 1; i < ports.length; i++) {
       ipc.send('selectPort', ports[i]);
       ipc.once('portOpen', checkConnection);
     }
@@ -529,7 +529,7 @@
   var lastData;
   var led_mode = 0;
   function processData(e, data) {
-    // console.log(data);
+    // console.log(e, data);
     // port data for connecting the app
     if (typeof data !== 'string' && Array.isArray(data)) {
       selectPort(data);

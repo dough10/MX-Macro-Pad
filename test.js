@@ -23,9 +23,10 @@ function createWindow () {
   contents.openDevTools();
   /*-- gets a array of avaliable COM ports and sends to app.js--*/
   getPortsList().then((ports) => {
+    console.log(ports);
     setTimeout(() => {
       contents.send('data', ports);
-    }, 1000);
+    }, 4000);
   });
   /*-- selecting port for serial --*/
   ipc.on('selectPort', (event, portNum) => {
@@ -46,6 +47,7 @@ function createWindow () {
     });
     // forward data to UI (app.js)
     parser.on('data', data =>{
+      console.log(data);
       contents.send('data', data);
     });
   });
