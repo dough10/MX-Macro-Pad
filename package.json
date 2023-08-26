@@ -5,7 +5,7 @@
   "main": "main.js",
   "dependencies": {
     "colors": "^1.4.0",
-    "electron-packager": "^15.4.0",
+    "electron-packager": "^17.1.2",
     "electron-unhandled": "^3.0.2",
     "html-minifier": "^4.0.0",
     "node-gyp": "^7.1.0",
@@ -14,7 +14,7 @@
     "uglifycss": "0.0.29"
   },
   "devDependencies": {
-    "electron": "=18.3.7",
+    "electron": "=26.1.0",
     "electron-rebuild": "^1.11.0",
     "jshint": "^2.13.4",
     "version-incrementer": "^0.1.1"
