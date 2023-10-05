@@ -14,7 +14,7 @@
     "uglifycss": "0.0.29"
   },
   "devDependencies": {
-    "electron": "=26.1.0",
+    "electron": "=26.2.4",
     "electron-rebuild": "^1.11.0",
     "jshint": "^2.13.4",
     "version-incrementer": "^0.1.1"
